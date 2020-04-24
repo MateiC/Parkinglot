@@ -1,0 +1,309 @@
+swagger: "2.0"
+info:
+  description: "This API provides all the interfaces required to interact with the Parking Lot Manager."
+  version: "1.0.0"
+  title: "Parking Lot Manager Swagger"
+basePath: "/parkinglotmanager"
+tags:
+- name: "Parking lot manager"
+  description: "Manage your parking lot"
+- name: "Parking lot client"
+  description: "Access the parking lot as a client"
+schemes:
+- "http"
+paths:
+  /parkinglots:
+    get:
+      tags:
+        - "Parking lot manager"
+      summary: "Fetch all the parking lots"
+      operationId: "getAllParkingLots"
+      produces:
+        - "application/json"
+      responses:
+        '200':
+          $ref: "#/responses/ParkingLotsBasic"
+        '400':
+          $ref: '#/responses/400'
+  /parkinglot/{parkingLotCode}:
+    get:
+      tags:
+      - "Parking lot manager"
+      summary: "Fetch the parking lot by it's code"
+      operationId: "getParkingLotByCode"
+      produces:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/ParkingLotCode"
+      responses:
+        '200':
+          $ref: "#/responses/ParkingLot"
+        '400':
+          $ref: '#/responses/400'
+        '404':
+          $ref: '#/responses/404'
+    post:
+      tags:
+      - "Parking lot manager"
+      summary: "Creates a parking lot with the given data"
+      operationId: "createparkinglot"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/ParkingLotCode"
+      - $ref: "#/parameters/ParkingLotCreate"
+      responses:
+        '200':
+          $ref: "#/responses/ParkingLot"
+        '405':
+          description: "Invalid input"
+    put:
+      tags:
+      - "Parking lot manager"
+      summary: "Updates a parking lot with the given data"
+      operationId: "updateparkinglot"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/ParkingLotCode"
+      - $ref: "#/parameters/ParkingLotUpdate"
+      responses:
+        '200':
+          $ref: "#/responses/ParkingLot"
+        '405':
+          description: "Invalid input"          
+    delete:
+      tags:
+      - "Parking lot manager"
+      summary: "Deletes a a parking lot"
+      operationId: "deleteParkingLot"
+      produces:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/ParkingLotCode"
+      responses:
+        '200':
+          $ref: '#/responses/200'      
+        '400':
+          $ref: '#/responses/400'
+        '404':
+          $ref: '#/responses/404'
+  /parkinglot/{parkingLotCode}/carParked:
+    post:
+      tags:
+      - "Parking lot client"
+      summary: "Creates an entry in the parking lot for the given car"
+      operationId: "createparkinglotentry"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/ParkingLotCode"
+      - $ref: "#/parameters/ParkingLotEntry"
+      responses:
+        '200':
+          $ref: "#/responses/ParkingLotEntry"
+        '405':
+          description: "Invalid input"
+    delete:
+      tags:
+      - "Parking lot client"
+      summary: "Requests the exit of a car from the parking lot"
+      operationId: "createparkinglotexit"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/ParkingLotCode"
+      responses:
+        200:
+          $ref: "#/parameters/ParkingLotExit" 
+        405:
+          description: "Invalid input"          
+definitions:
+  ParkingLotCode:
+    type: "string"
+    example: "NCE"
+  ParkingLotName:
+    type: "string"
+    example: "Nice Centre"  
+  Error:
+    title: error
+    description: Error description
+    type: string
+  ParkingLot:
+    title: ParkingLot
+    type: "object"
+    properties:
+      name:
+        $ref: "#/definitions/ParkingLotName"
+      numberOfStandardParkingSlots:
+        type: "integer"
+        format: "int32"
+      numberOf20KWParkingSlots:
+        type: "integer"
+        format: "int32"
+      numberOf50KWParkingSlots:
+        type: "integer"
+        format: "int32"
+      pricingPolicy:
+        type: "string"
+        description: "Type of pricing policy to be used"
+        enum:
+        - "per hour"
+        - "per day"
+  ParkingLotsBasic:
+    title: ParkingLots
+    type: "array"
+    items:
+      type: "object"
+      required:
+      - name
+      - code
+      properties:
+        name:
+          $ref: "#/definitions/ParkingLotName"
+        code:
+          $ref: "#/definitions/ParkingLotCode"
+  ParkingLotCreate:
+    allOf:
+      - $ref: "#/definitions/ParkingLot"
+      - type: "object"
+        required:
+          - name
+          - numberOfStandardParkingSlots
+          - numberOf20KWParkingSlots
+          - numberOf50KWParkingSlots
+          - pricingPolicy
+  ParkingLotUpdate:
+    allOf:
+      - $ref: "#/definitions/ParkingLot"
+      - type: "object"
+  ParkingLotEntryRQ:
+    type: "object"
+    required:
+    - carID
+    - carType
+    properties:
+      carID:
+        type: "string"
+        example: "BB123EQ"
+      carType:
+        type: "string"
+        description: "Type of car to be used"
+        enum:
+        - "gasoline"
+        - "20kW"
+        - "50kW"
+  ParkingLotEntryRS:
+    allOf:
+      - $ref: "#/definitions/ParkingLotEntryRQ"
+      - type: "object"
+        required:
+          - assignedSlot
+        properties:
+            assignedSlot:
+              type: "string"
+              example: "standard-10"
+  ParkingLotExitRS:
+    type: "object"
+    required:
+    - carID
+    - assignedSlot
+    - sumToPay
+    properties:
+      carID:
+        type: "string"
+        example: "BB123EQ"
+      assignedSlot:
+        type: "string"
+        example: "standard-10"
+      sumToPay:
+        type: "number"
+        format: "double"
+        example: 32
+parameters:
+  ParkingLotCode:
+    name: parkingLotCode
+    in: path
+    required: true
+    description: 3 character parking lot code
+    type: string
+    minLength: 3
+    maxLength: 3
+    pattern: '[A-Z0-9]{3}'        
+  ParkingLotCreate:
+    in: "body"
+    name: "body"
+    description: "Parking lot model that needs to be added"
+    required: true
+    schema:
+      $ref: "#/definitions/ParkingLotCreate"
+  ParkingLotUpdate:
+    in: "body"
+    name: "body"
+    description: "Parking lot model that needs to be updated"
+    required: true
+    schema:
+      $ref: "#/definitions/ParkingLotUpdate"
+  ParkingLotEntry:
+    in: "body"
+    name: "body"
+    description: "Parking lot model that needs to be added"
+    required: true
+    schema:
+      $ref: "#/definitions/ParkingLotEntryRQ"    
+  ParkingLotExit:
+    in: "body"
+    name: "body"
+    description: "Parking lot model that needs to be added"
+    required: true
+    schema:
+      $ref: "#/definitions/ParkingLotExitRS"    
+responses:
+  ParkingLotsBasic:
+    description: Retrieve all parking lots
+    schema:
+      $ref: '#/definitions/ParkingLotsBasic'
+  ParkingLot:
+    description: Retrieve one parking lot
+    schema:
+      $ref: '#/definitions/ParkingLot'
+  ParkingLotEntry:
+    description: Retrieve one parking lot
+    schema:
+      $ref: '#/definitions/ParkingLotEntryRS' 
+  ParkingLotExit:
+    description: Retrieve one parking lot
+    schema:
+      $ref: '#/definitions/ParkingLotEntryRQ'   
+  Error:
+    description: Retrieve one parking lot
+    schema:
+      $ref: '#/definitions/Error'    
+  '200':
+    description: Successful operation
+    schema:
+      type: string    
+  '400':
+    description: Bad Request
+    schema:
+      $ref: '#/definitions/Error'
+  '403':
+    description: Forbidden
+    schema:
+      $ref: '#/definitions/Error'
+  '404':
+    description: Resource Not found
+    schema:
+      $ref: '#/definitions/Error'    
+  '500':
+    description: Unexpected error
+    schema:
+      $ref: '#/definitions/Error'
