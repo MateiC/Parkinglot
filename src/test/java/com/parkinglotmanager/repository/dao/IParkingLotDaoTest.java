@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.parkinglotmanager.repository.models.ParkingLotEntity;
 import com.parkinglotmanager.repository.models.ParkingSpaceEntity;
+import com.parkinglotmanager.service.ParkingSlotType;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -28,7 +29,6 @@ public class IParkingLotDaoTest {
 																						.code("PKG")
 																						.description("Parking lot")
 																						.gasolineSlots(1)
-																						.pricingStrategy(1)
 																						.smallKwSlots(2)
 																						.bigKwSlots(3)
 																						.build());
@@ -42,14 +42,13 @@ public class IParkingLotDaoTest {
 	public void testSaveWithParkingSpace() {
 		ParkingSpaceEntity parkingSpace = ParkingSpaceEntity.builder()
 															.code("PS1")
-															.isOccupied(true)
-															.type(0)
+															/* .isOccupied(true) */
+															.type(ParkingSlotType.GASOLINE.toString())
 															.build();
 		ParkingLotEntity parkingLotEntity = ParkingLotEntity.builder()
 															.code("PKG")
 															.description("Parking lot")
 															.gasolineSlots(1)
-															.pricingStrategy(1)
 															.smallKwSlots(2)
 															.bigKwSlots(3)
 															.parkingSpaces(Arrays.asList(parkingSpace))

@@ -157,11 +157,18 @@ definitions:
         type: "integer"
         format: "int32"
       pricingPolicy:
-        type: "string"
-        description: "Type of pricing policy to be used"
-        enum:
-        - "per hour"
-        - "per day"
+        type: "object"
+        title: PricingPolicy
+        properties:
+          policy:
+            type: "string"
+            description: "Type of pricing policy to be used"
+            enum:
+            - "perHour"
+            - "perHourWithBasePrice"
+          basePrice:   
+             type: "integer"
+             format: "int32"
   ParkingLotsBasic:
     title: ParkingLotsBasic
     type: "array"
@@ -187,9 +194,23 @@ definitions:
           - numberOf50KWParkingSlots
           - pricingPolicy
   ParkingLotUpdate:
-    allOf:
-      - $ref: "#/definitions/ParkingLot"
-      - type: "object"
+    type: "object"
+    required:
+    - pricingPolicy
+    properties:
+      pricingPolicy:
+        type: "object"
+        title: PricingPolicy
+        properties:
+          policy:
+            type: "string"
+            description: "Type of pricing policy to be used"
+            enum:
+            - "perHour"
+            - "perHourWithBasePrice"
+          basePrice:   
+             type: "integer"
+             format: "int32"
   ParkingLotEntryRQ:
     type: "object"
     required:

@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.parkinglotmanager.repository.models.ParkingSpaceEntity;
+import com.parkinglotmanager.service.ParkingSlotType;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -22,7 +23,11 @@ public class IParkingSpaceDaoTest {
 	@Test
 	public void testSaveAndFlushAndFindOneById() {
 
-		ParkingSpaceEntity parkingSpace = ParkingSpaceEntity.builder().code("PS1").isOccupied(true).type(0).build();
+		ParkingSpaceEntity parkingSpace = ParkingSpaceEntity.builder()
+															.code("PS1")
+															/* .isOccupied(true) */
+															.type(ParkingSlotType.GASOLINE.toString())
+															.build();
 
 		ParkingSpaceEntity persistedEntity = testInstance.saveAndFlush(parkingSpace);
 

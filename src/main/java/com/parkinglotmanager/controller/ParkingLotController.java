@@ -44,7 +44,7 @@ public class ParkingLotController {
 			@RequestBody ParkingLotCreate parkingLotCreateBody) {
 
 		ParkingLotEntity serviceResponse = parkingLotService.create(
-				parkingLotMapper.mapToParkingLotEntityToInsert(parkingLotCode, parkingLotCreateBody));
+				parkingLotMapper.mapToParkingLotEntityToCreate(parkingLotCode, parkingLotCreateBody));
 		return parkingLotMapper.mapToParkingLot(serviceResponse);
 	}
 
@@ -52,7 +52,7 @@ public class ParkingLotController {
 	public ParkingLot updateParkingLot(@PathVariable String parkingLotCode,
 			@RequestBody ParkingLotUpdate parkingLotUpdateBody) {
 
-		ParkingLotEntity serviceResponse = parkingLotService.create(
+		ParkingLotEntity serviceResponse = parkingLotService.update(
 				parkingLotMapper.mapToParkingLotEntityToUpdate(parkingLotCode, parkingLotUpdateBody));
 		return parkingLotMapper.mapToParkingLot(serviceResponse);
 	}

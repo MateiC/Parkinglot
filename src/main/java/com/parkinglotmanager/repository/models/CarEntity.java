@@ -9,13 +9,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "CAR")
+@Table(name = "CAR", uniqueConstraints = { @UniqueConstraint(columnNames = { "plate" }) })
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder

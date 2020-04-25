@@ -10,7 +10,9 @@ import com.parkinglotmanager.ParkingLotCreate;
 import com.parkinglotmanager.ParkingLotUpdate;
 import com.parkinglotmanager.ParkingLotsBasic;
 import com.parkinglotmanager.ParkingLotsBasicElement;
+import com.parkinglotmanager.PricingPolicy;
 import com.parkinglotmanager.repository.models.ParkingLotEntity;
+import com.parkinglotmanager.repository.models.PricingPolicyEntity;
 
 @Component
 public class ParkingLotMapper {
@@ -43,7 +45,7 @@ public class ParkingLotMapper {
 								.build();
 	}
 
-	public ParkingLotEntity mapToParkingLotEntityToInsert(String parkingLotCode,
+	public ParkingLotEntity mapToParkingLotEntityToCreate(String parkingLotCode,
 			ParkingLotCreate parkingLotCreateBody) {
 		return ParkingLotEntity	.builder()
 								.code(parkingLotCode)
@@ -51,6 +53,7 @@ public class ParkingLotMapper {
 								.smallKwSlots(parkingLotCreateBody.getNumberOf20KWParkingSlots())
 								.bigKwSlots(parkingLotCreateBody.getNumberOf50KWParkingSlots())
 								.gasolineSlots(parkingLotCreateBody.getNumberOfStandardParkingSlots())
+								.pricingPolicy(mapToPricingPolicyEntity(parkingLotCreateBody.getPricingPolicy()))
 								.build();
 	}
 
@@ -58,10 +61,15 @@ public class ParkingLotMapper {
 			ParkingLotUpdate parkingLotUpdateBody) {
 		return ParkingLotEntity	.builder()
 								.code(parkingLotCode)
-								.description(parkingLotUpdateBody.getDescription())
-								.smallKwSlots(parkingLotUpdateBody.getNumberOf20KWParkingSlots())
-								.bigKwSlots(parkingLotUpdateBody.getNumberOf50KWParkingSlots())
-								.gasolineSlots(parkingLotUpdateBody.getNumberOfStandardParkingSlots())
+								.pricingPolicy(mapToPricingPolicyEntity(parkingLotUpdateBody.getPricingPolicy()))
 								.build();
+	}
+
+	private PricingPolicyEntity mapToPricingPolicyEntity(PricingPolicy pricingPolicy) {
+		return PricingPolicyEntity	.builder()
+									.basePrice(pricingPolicy.getBasePrice())
+									.type(pricingPolicy	.getPolicy()
+														.toString())
+									.build();
 	}
 }
