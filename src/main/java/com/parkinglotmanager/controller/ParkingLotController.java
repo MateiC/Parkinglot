@@ -35,7 +35,7 @@ public class ParkingLotController {
 
 	@GetMapping(path = "/parkinglot/{parkingLotCode}", produces = "application/json")
 	public ParkingLot retrieveParkingLot(@PathVariable String parkingLotCode) {
-		return parkingLotMapper.mapToRetrieve(
+		return parkingLotMapper.mapToParkingLot(
 				parkingLotService.retrieve(parkingLotMapper.mapToParkingLotEntityWithCode(parkingLotCode)));
 	}
 
@@ -45,7 +45,7 @@ public class ParkingLotController {
 
 		ParkingLotEntity serviceResponse = parkingLotService.create(
 				parkingLotMapper.mapToParkingLotEntityToInsert(parkingLotCode, parkingLotCreateBody));
-		return parkingLotMapper.mapToParkingLotCreateResponse(serviceResponse);
+		return parkingLotMapper.mapToParkingLot(serviceResponse);
 	}
 
 	@PutMapping(path = "/parkinglot/{parkingLotCode}", consumes = "application/json", produces = "application/json")
@@ -54,7 +54,7 @@ public class ParkingLotController {
 
 		ParkingLotEntity serviceResponse = parkingLotService.create(
 				parkingLotMapper.mapToParkingLotEntityToUpdate(parkingLotCode, parkingLotUpdateBody));
-		return parkingLotMapper.mapToParkingLotCreateResponse(serviceResponse);
+		return parkingLotMapper.mapToParkingLot(serviceResponse);
 	}
 
 	@DeleteMapping(path = "/parkinglot/{parkingLotCode}", consumes = "application/json", produces = "application/json")

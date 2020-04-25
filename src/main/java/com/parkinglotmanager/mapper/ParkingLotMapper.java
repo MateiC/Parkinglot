@@ -29,7 +29,7 @@ public class ParkingLotMapper {
 
 	}
 
-	public ParkingLot mapToRetrieve(ParkingLotEntity parkingLotEntity) {
+	public ParkingLot mapToParkingLot(ParkingLotEntity parkingLotEntity) {
 		return new ParkingLot()	.description(parkingLotEntity.getDescription())
 								.numberOf20KWParkingSlots(parkingLotEntity.getSmallKwSlots())
 								.numberOf50KWParkingSlots(parkingLotEntity.getBigKwSlots())
@@ -64,10 +64,4 @@ public class ParkingLotMapper {
 								.gasolineSlots(parkingLotUpdateBody.getNumberOfStandardParkingSlots())
 								.build();
 	}
-
-	public ParkingLot mapToParkingLotCreateResponse(ParkingLotEntity serviceResponse) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

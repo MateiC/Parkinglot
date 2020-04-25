@@ -133,10 +133,14 @@ definitions:
   ParkingLotDescription:
     type: "string"
     example: "Nice Centre"  
-  Error:
-    title: error
-    description: Error description
-    type: string
+  ErrorType:
+    title: ErrorType
+    type: "object"
+    properties:
+       error:
+          type: "string"
+          description: Error description
+          example: "Entity not found"
   ParkingLot:
     title: ParkingLot
     type: "object"
@@ -284,10 +288,10 @@ responses:
     description: Retrieve one parking lot
     schema:
       $ref: '#/definitions/ParkingLotEntryRQ'   
-  Error:
+  ErrorResponse:
     description: Retrieve one parking lot
     schema:
-      $ref: '#/definitions/Error'    
+      $ref: '#/definitions/ErrorType'    
   '200':
     description: Successful operation
     schema:
@@ -295,16 +299,16 @@ responses:
   '400':
     description: Bad Request
     schema:
-      $ref: '#/definitions/Error'
+      $ref: '#/definitions/ErrorType'
   '403':
     description: Forbidden
     schema:
-      $ref: '#/definitions/Error'
+      $ref: '#/definitions/ErrorType'
   '404':
     description: Resource Not found
     schema:
-      $ref: '#/definitions/Error'    
+      $ref: '#/definitions/ErrorType'    
   '500':
     description: Unexpected error
     schema:
-      $ref: '#/definitions/Error'
+      $ref: '#/definitions/ErrorType'
