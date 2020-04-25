@@ -130,7 +130,7 @@ definitions:
   ParkingLotCode:
     type: "string"
     example: "NCE"
-  ParkingLotName:
+  ParkingLotDescription:
     type: "string"
     example: "Nice Centre"  
   Error:
@@ -141,8 +141,8 @@ definitions:
     title: ParkingLot
     type: "object"
     properties:
-      name:
-        $ref: "#/definitions/ParkingLotName"
+      description:
+        $ref: "#/definitions/ParkingLotDescription"
       numberOfStandardParkingSlots:
         type: "integer"
         format: "int32"
@@ -159,16 +159,17 @@ definitions:
         - "per hour"
         - "per day"
   ParkingLotsBasic:
-    title: ParkingLots
+    title: ParkingLotsBasic
     type: "array"
     items:
       type: "object"
+      title: ParkingLotsBasicElement
       required:
-      - name
+      - description
       - code
       properties:
-        name:
-          $ref: "#/definitions/ParkingLotName"
+        description:
+          $ref: "#/definitions/ParkingLotDescription"
         code:
           $ref: "#/definitions/ParkingLotCode"
   ParkingLotCreate:
@@ -176,7 +177,7 @@ definitions:
       - $ref: "#/definitions/ParkingLot"
       - type: "object"
         required:
-          - name
+          - description
           - numberOfStandardParkingSlots
           - numberOf20KWParkingSlots
           - numberOf50KWParkingSlots

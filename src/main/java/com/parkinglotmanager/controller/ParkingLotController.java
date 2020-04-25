@@ -1,6 +1,6 @@
 package com.parkinglotmanager.controller;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,54 +12,53 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.parkinglotmanager.ParkingLot;
 import com.parkinglotmanager.ParkingLotCreate;
-import com.parkinglotmanager.ParkingLotEntryRS;
-import com.parkinglotmanager.ParkingLotExitRS;
 import com.parkinglotmanager.ParkingLotUpdate;
 import com.parkinglotmanager.ParkingLotsBasic;
-import com.parkinglotmanager.ParkingLotsBasicInner;
+import com.parkinglotmanager.mapper.ParkingLotMapper;
+import com.parkinglotmanager.repository.models.ParkingLotEntity;
+import com.parkinglotmanager.service.ParkingLotServiceImpl;
 
 @RestController
 @RequestMapping("parkinglotmanager")
-public class ParkingLotManagerController {
+public class ParkingLotController {
+
+	@Autowired
+	ParkingLotServiceImpl parkingLotService;
+
+	@Autowired
+	ParkingLotMapper parkingLotMapper;
 
 	@GetMapping("/parkinglots")
 	public ParkingLotsBasic retrieveAllParkingLots() {
-		ParkingLotsBasic response = new ParkingLotsBasic();
-		response.add(new ParkingLotsBasicInner().code("test"));
-		return response;
+		return parkingLotMapper.mapToRetrieveAll(parkingLotService.retrieveAll());
 	}
 
 	@GetMapping(path = "/parkinglot/{parkingLotCode}", produces = "application/json")
 	public ParkingLot retrieveParkingLot(@PathVariable String parkingLotCode) {
-		return new ParkingLot().name("test");
+		return parkingLotMapper.mapToRetrieve(
+				parkingLotService.retrieve(parkingLotMapper.mapToParkingLotEntityWithCode(parkingLotCode)));
 	}
 
 	@PostMapping(path = "/parkinglot/{parkingLotCode}", consumes = "application/json", produces = "application/json")
 	public ParkingLot createParkingLot(@PathVariable String parkingLotCode,
 			@RequestBody ParkingLotCreate parkingLotCreateBody) {
-		return new ParkingLot().name("test");
+
+		ParkingLotEntity serviceResponse = parkingLotService.create(
+				parkingLotMapper.mapToParkingLotEntityToInsert(parkingLotCode, parkingLotCreateBody));
+		return parkingLotMapper.mapToParkingLotCreateResponse(serviceResponse);
 	}
 
 	@PutMapping(path = "/parkinglot/{parkingLotCode}", consumes = "application/json", produces = "application/json")
 	public ParkingLot updateParkingLot(@PathVariable String parkingLotCode,
 			@RequestBody ParkingLotUpdate parkingLotUpdateBody) {
-		return new ParkingLot().name("test");
+
+		ParkingLotEntity serviceResponse = parkingLotService.create(
+				parkingLotMapper.mapToParkingLotEntityToUpdate(parkingLotCode, parkingLotUpdateBody));
+		return parkingLotMapper.mapToParkingLotCreateResponse(serviceResponse);
 	}
 
 	@DeleteMapping(path = "/parkinglot/{parkingLotCode}", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> deleteParkingLot(@PathVariable String parkingLotCode) {
-		return ResponseEntity.ok().build();
+	public void deleteParkingLot(@PathVariable String parkingLotCode) {
+		parkingLotService.delete(parkingLotMapper.mapToParkingLotEntityWithCode(parkingLotCode));
 	}
-
-	@PostMapping(path = "/parkinglot/{parkingLotCode}/carParked", consumes = "application/json", produces = "application/json")
-	public ParkingLotEntryRS createParkingLotEntry(@PathVariable String parkingLotCode,
-			@RequestBody ParkingLotEntryRS parkingLotCreateBody) {
-		return new ParkingLotEntryRS();
-	}
-
-	@DeleteMapping(path = "/parkinglot/{parkingLotCode}/carParked", consumes = "application/json", produces = "application/json")
-	public ParkingLotExitRS deleteParkingLotEntry(@PathVariable String parkingLotCode) {
-		return new ParkingLotExitRS();
-	}
-
 }
