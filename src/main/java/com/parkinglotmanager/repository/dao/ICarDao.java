@@ -10,4 +10,6 @@ public interface ICarDao extends JpaRepository<CarEntity, Integer> {
 
 	CarEntity findByPlate(String plate);
 
+	int countByPlate(String plate);
+
 }

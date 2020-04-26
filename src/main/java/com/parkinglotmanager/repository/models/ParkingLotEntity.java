@@ -47,6 +47,6 @@ public class ParkingLotEntity extends AbstractBaseEntity {
 	private PricingPolicyEntity pricingPolicy;
 
 	@Builder.Default
-	@OneToMany(mappedBy = "parkingLot", orphanRemoval = true, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL)
 	private List<ParkingSpaceEntity> parkingSpaces = new ArrayList<ParkingSpaceEntity>();
 }

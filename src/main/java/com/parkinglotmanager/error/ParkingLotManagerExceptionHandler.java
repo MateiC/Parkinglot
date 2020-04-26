@@ -22,7 +22,6 @@ public class ParkingLotManagerExceptionHandler extends ResponseEntityExceptionHa
 	@ExceptionHandler({ ParkingLotManagerException.class })
 	ResponseEntity<Object> handleCustomException(ParkingLotManagerException plmex, WebRequest request) {
 		ErrorType error = new ErrorType().error(plmex.getMessage());
-		plmex.printStackTrace();
 		return new ResponseEntity<Object>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

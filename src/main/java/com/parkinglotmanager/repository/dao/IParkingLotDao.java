@@ -10,5 +10,7 @@ public interface IParkingLotDao extends JpaRepository<ParkingLotEntity, Integer>
 
 	ParkingLotEntity findByCode(String code);
 
+	int countByCode(String code);
+
 	void deleteByCode(String code);
 }

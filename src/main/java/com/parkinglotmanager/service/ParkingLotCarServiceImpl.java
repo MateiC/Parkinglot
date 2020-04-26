@@ -54,14 +54,22 @@ public class ParkingLotCarServiceImpl implements IParkingLotCarService {
 		return carBom;
 	}
 
-	void checkIfEntityExists(CarEntity carEntity) {
-		if (carDao.findByPlate(carEntity.getPlate()) != null) {
+	private int countEntity(String plate) {
+		return carDao.countByPlate(plate);
+	}
+
+	private CarEntity findEntity(String plate) {
+		return carDao.findByPlate(plate);
+	}
+
+	private void checkIfEntityExists(CarEntity carEntity) {
+		if (countEntity(carEntity.getPlate()) > 0) {
 			throw new ParkingLotManagerException(ErrorsEnum.CAR_ALREADY_EXISTS);
 		}
 	}
 
-	CarEntity retrievePersistedEntity(CarEntity carEntity) {
-		CarEntity persistedCarEntity = carDao.findByPlate(carEntity.getPlate());
+	private CarEntity retrievePersistedEntity(CarEntity carEntity) {
+		CarEntity persistedCarEntity = findEntity(carEntity.getPlate());
 		if (persistedCarEntity == null) {
 			throw new ParkingLotManagerException(ErrorsEnum.CAR_NOT_FOUND);
 		} else {
@@ -69,7 +77,7 @@ public class ParkingLotCarServiceImpl implements IParkingLotCarService {
 		}
 	}
 
-	void checkIfParkingLotDoesNotExist(String code) {
+	private void checkIfParkingLotDoesNotExist(String code) {
 		if (parkingLotDao.findByCode(code) == null) {
 			throw new ParkingLotManagerException(ErrorsEnum.PARKING_LOT_NOT_FOUND);
 		}
@@ -102,8 +110,8 @@ public class ParkingLotCarServiceImpl implements IParkingLotCarService {
 	private void computePrice(CarBom carBom) {
 		ParkingLotEntity persistedParkingLot = parkingLotDao.findByCode(carBom.getParkingLotCode());
 		PricingPolicyEntity persistedPricingPolicy = persistedParkingLot.getPricingPolicy();
-		CarEntity persisteCarEntity = carDao.findByPlate(carBom	.getCarEntity()
-																.getPlate());
+		CarEntity persisteCarEntity = findEntity(carBom	.getCarEntity()
+														.getPlate());
 
 		long diff = Date.from(Instant.now())
 						.getTime()

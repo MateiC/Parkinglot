@@ -146,8 +146,8 @@ public class ParkingLotCarServiceImplTest {
 				.thenReturn(new ParkingLotEntity());
 
 		// car already exists
-		Mockito	.when(carDao.findByPlate(carEntityWithNoSpace.getPlate()))
-				.thenReturn(new CarEntity());
+		Mockito	.when(carDao.countByPlate(carEntityWithNoSpace.getPlate()))
+				.thenReturn(1);
 
 		expectedError(ErrorsEnum.CAR_ALREADY_EXISTS);
 
@@ -160,10 +160,6 @@ public class ParkingLotCarServiceImplTest {
 		// parking lot exists
 		Mockito	.when(parkingLotDao.findByCode(carBom.getParkingLotCode()))
 				.thenReturn(new ParkingLotEntity());
-
-		// car does not exist
-		Mockito	.when(carDao.findByPlate(carEntityWithNoSpace.getPlate()))
-				.thenReturn(null);
 
 		// no free space
 		Mockito	.when(parkingSpaceDao.countFreeSlotsByTypeWithParkingLotCode(carEntityWithNoSpace.getType(),
@@ -181,10 +177,6 @@ public class ParkingLotCarServiceImplTest {
 		// parking lot exists
 		Mockito	.when(parkingLotDao.findByCode(carBom.getParkingLotCode()))
 				.thenReturn(new ParkingLotEntity());
-
-		// car does not exist
-		Mockito	.when(carDao.findByPlate(carEntityWithNoSpace.getPlate()))
-				.thenReturn(null);
 
 		// there are free spaces
 		Mockito	.when(parkingSpaceDao.countFreeSlotsByTypeWithParkingLotCode(carEntityWithNoSpace.getType(),

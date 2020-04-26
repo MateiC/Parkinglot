@@ -32,15 +32,15 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 
 	@Override
 	public ParkingLotEntity create(ParkingLotEntity parkingLot) {
-		checkIfEntityExists(parkingLot);
+		checkIfEntityAlreadyExists(parkingLot);
 		createParkingSpaces(parkingLot);
 		return parkingLotDao.save(parkingLot);
 	}
 
 	@Override
 	public ParkingLotEntity retrieve(ParkingLotEntity parkingLot) {
-		checkIfEntityDoesNotExist(parkingLot);
-		return parkingLotDao.findByCode(parkingLot.getCode());
+		ParkingLotEntity persistedEntity = retrievePersistedEntity(parkingLot);
+		return persistedEntity;
 	}
 
 	@Override
@@ -50,16 +50,15 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 
 	@Override
 	public ParkingLotEntity update(ParkingLotEntity parkingLot) {
-		checkIfEntityDoesNotExist(parkingLot);
-		ParkingLotEntity persistedEntity = retrieveAndUpdatePricingPolicy(parkingLot);
+		ParkingLotEntity persistedEntity = retrievePersistedEntity(parkingLot);
+		updatePricingPolicy(persistedEntity);
 		return parkingLotDao.save(persistedEntity);
 	}
 
 	@Override
 	public void delete(ParkingLotEntity parkingLot) {
-		checkIfEntityDoesNotExist(parkingLot);
-		ParkingLotEntity foundEntity = parkingLotDao.findByCode(parkingLot.getCode());
-		parkingLotDao.delete(foundEntity);
+		ParkingLotEntity persistedEntity = retrievePersistedEntity(parkingLot);
+		parkingLotDao.delete(persistedEntity);
 	}
 
 	private void createParkingSpaces(ParkingLotEntity parkingLot) {
@@ -75,7 +74,7 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 
 	}
 
-	List<ParkingSpaceEntity> createParkingSpacesEntityByType(ParkingLotEntity parkingLot, int size,
+	private List<ParkingSpaceEntity> createParkingSpacesEntityByType(ParkingLotEntity parkingLot, int size,
 			InternalCarTypeEnum type) {
 		ArrayList<ParkingSpaceEntity> result = new ArrayList<ParkingSpaceEntity>();
 		for (int i = 0; i < size; i++) {
@@ -89,27 +88,37 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 		return result;
 	}
 
-	void checkIfEntityExists(ParkingLotEntity parkingLot) {
-		if (parkingLotDao.findByCode(parkingLot.getCode()) != null) {
+	private int countEntity(String code) {
+		return parkingLotDao.countByCode(code);
+	}
+
+	private ParkingLotEntity findEntity(String code) {
+		return parkingLotDao.findByCode(code);
+	}
+
+	private void checkIfEntityAlreadyExists(ParkingLotEntity parkingLot) {
+		if (countEntity(parkingLot.getCode()) > 0) {
 			throw new ParkingLotManagerException(ErrorsEnum.PARKING_LOT_ALREADY_EXISTS);
 		}
 	}
 
-	void checkIfEntityDoesNotExist(ParkingLotEntity parkingLot) {
-		if (parkingLotDao.findByCode(parkingLot.getCode()) == null) {
+	private ParkingLotEntity retrievePersistedEntity(ParkingLotEntity parkingLot) {
+		ParkingLotEntity persistedParkingLotEntity = findEntity(parkingLot.getCode());
+		if (persistedParkingLotEntity == null) {
 			throw new ParkingLotManagerException(ErrorsEnum.PARKING_LOT_NOT_FOUND);
+		} else {
+			return persistedParkingLotEntity;
 		}
 	}
 
-	private ParkingLotEntity retrieveAndUpdatePricingPolicy(ParkingLotEntity parkingLot) {
-		ParkingLotEntity persistedLotEntity = parkingLotDao.findByCode(parkingLot.getCode());
+	private ParkingLotEntity updatePricingPolicy(ParkingLotEntity persistedLotEntity) {
 		PricingPolicyEntity persistentPricingPolicy = persistedLotEntity.getPricingPolicy();
-		persistentPricingPolicy.setBasePrice(parkingLot	.getPricingPolicy()
-														.getBasePrice());
-		persistentPricingPolicy.setType(parkingLot	.getPricingPolicy()
-													.getType());
-		persistentPricingPolicy.setFixedAmmount(parkingLot	.getPricingPolicy()
-															.getFixedAmmount());
+		persistentPricingPolicy.setBasePrice(persistedLotEntity	.getPricingPolicy()
+																.getBasePrice());
+		persistentPricingPolicy.setType(persistedLotEntity	.getPricingPolicy()
+															.getType());
+		persistentPricingPolicy.setFixedAmmount(persistedLotEntity	.getPricingPolicy()
+																	.getFixedAmmount());
 		return persistedLotEntity;
 
 	}

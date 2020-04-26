@@ -132,6 +132,9 @@ definitions:
   ParkingLotCode:
     type: "string"
     example: "NCE"
+    minLength: 3
+    maxLength: 3
+    pattern: '[A-Z0-9]{3}'
   ParkingLotDescription:
     type: "string"
     example: "Nice Centre"  
@@ -213,6 +216,9 @@ definitions:
       fixedAmmount:
          type: "number"
          format: "float"
+  AssignedSlot:
+    type: "string"
+    example: "G10"
   ParkingLotEntryRQ:
     type: "object"
     required:
@@ -238,8 +244,7 @@ definitions:
       carID:
         $ref: "#/definitions/CarID"
       assignedSlot:
-        type: "string"
-        example: "standard-10"
+       $ref: "#/definitions/AssignedSlot"
       entryTime:
         type: "string"
   ParkingLotExitRS:
@@ -252,8 +257,7 @@ definitions:
       carID:
         $ref: "#/definitions/CarID"
       assignedSlot:
-        type: "string"
-        example: "standard-10"
+        $ref: "#/definitions/AssignedSlot"
       sumToPay:
         type: "number"
         format: "float"
