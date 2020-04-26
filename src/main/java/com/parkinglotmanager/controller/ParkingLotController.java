@@ -16,14 +16,14 @@ import com.parkinglotmanager.ParkingLotUpdate;
 import com.parkinglotmanager.ParkingLotsBasic;
 import com.parkinglotmanager.mapper.ParkingLotMapper;
 import com.parkinglotmanager.repository.models.ParkingLotEntity;
-import com.parkinglotmanager.service.ParkingLotServiceImpl;
+import com.parkinglotmanager.service.interfaces.IParkingLotService;
 
 @RestController
 @RequestMapping("parkinglotmanager")
 public class ParkingLotController {
 
 	@Autowired
-	ParkingLotServiceImpl parkingLotService;
+	IParkingLotService parkingLotService;
 
 	@Autowired
 	ParkingLotMapper parkingLotMapper;

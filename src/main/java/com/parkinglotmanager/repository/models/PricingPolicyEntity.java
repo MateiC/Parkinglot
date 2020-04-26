@@ -28,7 +28,10 @@ public class PricingPolicyEntity extends AbstractBaseEntity {
 	private String type;
 
 	@Column
-	private Integer basePrice;
+	private Float basePrice;
+
+	@Column
+	private Float fixedAmmount;
 
 	@Builder.Default
 	@OneToMany(mappedBy = "pricingPolicy", orphanRemoval = true)

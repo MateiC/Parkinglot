@@ -11,8 +11,12 @@ import com.parkinglotmanager.ParkingLotUpdate;
 import com.parkinglotmanager.ParkingLotsBasic;
 import com.parkinglotmanager.ParkingLotsBasicElement;
 import com.parkinglotmanager.PricingPolicy;
+import com.parkinglotmanager.PricingPolicy.PolicyEnum;
+import com.parkinglotmanager.error.ErrorsEnum;
+import com.parkinglotmanager.error.ParkingLotManagerException;
 import com.parkinglotmanager.repository.models.ParkingLotEntity;
 import com.parkinglotmanager.repository.models.PricingPolicyEntity;
+import com.parkinglotmanager.service.InternalPricingPolicyEnum;
 
 @Component
 public class ParkingLotMapper {
@@ -65,11 +69,21 @@ public class ParkingLotMapper {
 								.build();
 	}
 
+	private String PolicyEnumToInternalPricingPolicyEnum(PolicyEnum policyType) {
+		switch (policyType) {
+		case PERHOUR:
+			return InternalPricingPolicyEnum.PER_HOUR.toString();
+		case PERHOURWITHBASEPRICE:
+			return InternalPricingPolicyEnum.PER_HOUR_WITH_FIXED_AMMOUNT.toString();
+		default:
+			throw new ParkingLotManagerException(ErrorsEnum.UNKNOWN_PRICING_POLICY_TYPE);
+		}
+	}
+
 	private PricingPolicyEntity mapToPricingPolicyEntity(PricingPolicy pricingPolicy) {
 		return PricingPolicyEntity	.builder()
 									.basePrice(pricingPolicy.getBasePrice())
-									.type(pricingPolicy	.getPolicy()
-														.toString())
+									.type(PolicyEnumToInternalPricingPolicyEnum(pricingPolicy.getPolicy()))
 									.build();
 	}
 }

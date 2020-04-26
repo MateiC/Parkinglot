@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.parkinglotmanager.error.Errors;
+import com.parkinglotmanager.error.ErrorsEnum;
 import com.parkinglotmanager.error.ParkingLotManagerException;
 import com.parkinglotmanager.repository.dao.IParkingLotDao;
 import com.parkinglotmanager.repository.dao.IParkingSpaceDao;
@@ -64,20 +64,26 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 
 	private void createParkingSpaces(ParkingLotEntity parkingLot) {
 		parkingLot	.getParkingSpaces()
-					.addAll(createParkingSpacesEntityByType(parkingLot.getGasolineSlots(), ParkingSlotType.GASOLINE));
+					.addAll(createParkingSpacesEntityByType(parkingLot, parkingLot.getGasolineSlots(),
+							InternalCarTypeEnum.GASOLINE));
 		parkingLot	.getParkingSpaces()
-					.addAll(createParkingSpacesEntityByType(parkingLot.getSmallKwSlots(), ParkingSlotType.SMALLKW));
+					.addAll(createParkingSpacesEntityByType(parkingLot, parkingLot.getSmallKwSlots(),
+							InternalCarTypeEnum.SMALLKW));
 		parkingLot	.getParkingSpaces()
-					.addAll(createParkingSpacesEntityByType(parkingLot.getBigKwSlots(), ParkingSlotType.BIGKW));
+					.addAll(createParkingSpacesEntityByType(parkingLot, parkingLot.getBigKwSlots(),
+							InternalCarTypeEnum.BIGKW));
 
 	}
 
-	List<ParkingSpaceEntity> createParkingSpacesEntityByType(int size, ParkingSlotType type) {
+	List<ParkingSpaceEntity> createParkingSpacesEntityByType(ParkingLotEntity parkingLot, int size,
+			InternalCarTypeEnum type) {
 		ArrayList<ParkingSpaceEntity> result = new ArrayList<ParkingSpaceEntity>();
 		for (int i = 0; i < size; i++) {
 			result.add(ParkingSpaceEntity	.builder()
 											.code(type.toString() + i)
 											.type(type.toString())
+											.parkingLot(parkingLot)
+											.isOccupied(false)
 											.build());
 		}
 		return result;
@@ -85,13 +91,13 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 
 	void checkIfEntityExists(ParkingLotEntity parkingLot) {
 		if (parkingLotDao.findByCode(parkingLot.getCode()) != null) {
-			throw new ParkingLotManagerException(Errors.ALREADY_EXISTS);
+			throw new ParkingLotManagerException(ErrorsEnum.PARKING_LOT_ALREADY_EXISTS);
 		}
 	}
 
 	void checkIfEntityDoesNotExist(ParkingLotEntity parkingLot) {
 		if (parkingLotDao.findByCode(parkingLot.getCode()) == null) {
-			throw new ParkingLotManagerException(Errors.NOT_FOUND);
+			throw new ParkingLotManagerException(ErrorsEnum.PARKING_LOT_NOT_FOUND);
 		}
 	}
 
@@ -102,6 +108,8 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 														.getBasePrice());
 		persistentPricingPolicy.setType(parkingLot	.getPricingPolicy()
 													.getType());
+		persistentPricingPolicy.setFixedAmmount(parkingLot	.getPricingPolicy()
+															.getFixedAmmount());
 		return persistedLotEntity;
 
 	}

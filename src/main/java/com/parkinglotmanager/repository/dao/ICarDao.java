@@ -8,6 +8,6 @@ import com.parkinglotmanager.repository.models.CarEntity;
 @Repository
 public interface ICarDao extends JpaRepository<CarEntity, Integer> {
 
-	Object findByPlate(String plate);
+	CarEntity findByPlate(String plate);
 
 }

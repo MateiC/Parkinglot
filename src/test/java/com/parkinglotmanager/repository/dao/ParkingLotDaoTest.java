@@ -14,11 +14,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.parkinglotmanager.repository.models.ParkingLotEntity;
 import com.parkinglotmanager.repository.models.ParkingSpaceEntity;
-import com.parkinglotmanager.service.ParkingSlotType;
+import com.parkinglotmanager.service.InternalCarTypeEnum;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class IParkingLotDaoTest {
+public class ParkingLotDaoTest {
 
 	@Autowired
 	private IParkingLotDao testInstance;
@@ -43,7 +43,7 @@ public class IParkingLotDaoTest {
 		ParkingSpaceEntity parkingSpace = ParkingSpaceEntity.builder()
 															.code("PS1")
 															/* .isOccupied(true) */
-															.type(ParkingSlotType.GASOLINE.toString())
+															.type(InternalCarTypeEnum.GASOLINE.toString())
 															.build();
 		ParkingLotEntity parkingLotEntity = ParkingLotEntity.builder()
 															.code("PKG")

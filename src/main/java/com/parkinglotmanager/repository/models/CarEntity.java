@@ -11,27 +11,31 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "CAR", uniqueConstraints = { @UniqueConstraint(columnNames = { "plate" }) })
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CarEntity extends AbstractBaseEntity {
 
 	@Column
 	private String plate;
 
 	@Column
-	private Integer type;
+	private String type;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date arrivalTime;
 
 	@OneToOne
 	@JoinColumn(name = "parkinspace_id")
-	private ParkingSpaceEntity parkingspace;
+	private ParkingSpaceEntity parkingSpace;
 }

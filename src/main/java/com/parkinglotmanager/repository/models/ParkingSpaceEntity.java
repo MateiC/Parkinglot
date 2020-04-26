@@ -1,7 +1,10 @@
 package com.parkinglotmanager.repository.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -27,9 +30,13 @@ public class ParkingSpaceEntity extends AbstractBaseEntity {
 	@Column
 	private String type;
 
-//	@Column
-//	private Boolean isOccupied;
+	@Column
+	private Boolean isOccupied;
 
-	@OneToOne(mappedBy = "parkingspace")
+	@ManyToOne()
+	@JoinColumn(name = "parkingLot_id")
+	private ParkingLotEntity parkingLot;
+
+	@OneToOne(mappedBy = "parkingSpace", cascade = CascadeType.ALL)
 	private CarEntity car;
 }

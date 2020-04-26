@@ -110,6 +110,7 @@ paths:
           $ref: "#/responses/ParkingLotEntry"
         '405':
           description: "Invalid input"
+  /parkinglot/{parkingLotCode}/carParked/{carID}:        
     delete:
       tags:
       - "Parking lot client"
@@ -121,6 +122,7 @@ paths:
       - "application/json"
       parameters:
       - $ref: "#/parameters/ParkingLotCode"
+      - $ref: "#/parameters/CarID"
       responses:
         200:
           $ref: "#/parameters/ParkingLotExit" 
@@ -157,18 +159,7 @@ definitions:
         type: "integer"
         format: "int32"
       pricingPolicy:
-        type: "object"
-        title: PricingPolicy
-        properties:
-          policy:
-            type: "string"
-            description: "Type of pricing policy to be used"
-            enum:
-            - "perHour"
-            - "perHourWithBasePrice"
-          basePrice:   
-             type: "integer"
-             format: "int32"
+        $ref: "#/definitions/PricingPolicy"
   ParkingLotsBasic:
     title: ParkingLotsBasic
     type: "array"
@@ -199,18 +190,29 @@ definitions:
     - pricingPolicy
     properties:
       pricingPolicy:
-        type: "object"
-        title: PricingPolicy
-        properties:
-          policy:
-            type: "string"
-            description: "Type of pricing policy to be used"
-            enum:
-            - "perHour"
-            - "perHourWithBasePrice"
-          basePrice:   
-             type: "integer"
-             format: "int32"
+        $ref: "#/definitions/PricingPolicy"
+  CarID:
+    type: "string"
+    minLength: 7
+    maxLength: 7
+    pattern: '[A-Z0-9]{7}'
+    example: "BB123EQ"
+  PricingPolicy:
+    type: "object"
+    title: PricingPolicy
+    properties:
+      policy:
+        type: "string"
+        description: "Type of pricing policy to be used"
+        enum:
+        - "perHour"
+        - "perHourWithBasePrice"
+      basePrice:   
+         type: "number"
+         format: "float"
+      fixedAmmount:
+         type: "number"
+         format: "float"
   ParkingLotEntryRQ:
     type: "object"
     required:
@@ -218,8 +220,7 @@ definitions:
     - carType
     properties:
       carID:
-        type: "string"
-        example: "BB123EQ"
+        $ref: "#/definitions/CarID"
       carType:
         type: "string"
         description: "Type of car to be used"
@@ -228,15 +229,19 @@ definitions:
         - "20kW"
         - "50kW"
   ParkingLotEntryRS:
-    allOf:
-      - $ref: "#/definitions/ParkingLotEntryRQ"
-      - type: "object"
-        required:
-          - assignedSlot
-        properties:
-            assignedSlot:
-              type: "string"
-              example: "standard-10"
+    type: "object"
+    required:
+    - carID
+    - assignedSlot
+    - entryTime
+    properties:
+      carID:
+        $ref: "#/definitions/CarID"
+      assignedSlot:
+        type: "string"
+        example: "standard-10"
+      entryTime:
+        type: "string"
   ParkingLotExitRS:
     type: "object"
     required:
@@ -245,42 +250,49 @@ definitions:
     - sumToPay
     properties:
       carID:
-        type: "string"
-        example: "BB123EQ"
+        $ref: "#/definitions/CarID"
       assignedSlot:
         type: "string"
         example: "standard-10"
       sumToPay:
         type: "number"
-        format: "double"
-        example: 32
+        format: "float"
+        example: 32.5
 parameters:
   ParkingLotCode:
-    name: parkingLotCode
-    in: path
+    name: "parkingLotCode"
+    in: "path"
     required: true
-    description: 3 character parking lot code
-    type: string
+    description: "3 character parking lot code"
+    type: "string"
     minLength: 3
     maxLength: 3
-    pattern: '[A-Z0-9]{3}'        
+    pattern: '[A-Z0-9]{3}'     
+  CarID:
+    name: "carID"
+    in: "path"
+    required: true    
+    type: "string"
+    minLength: 7
+    maxLength: 7
+    pattern: '[A-Z0-9]{7}'
   ParkingLotCreate:
     in: "body"
-    name: "body"
+    name: "ParkingLotCreate"
     description: "Parking lot model that needs to be added"
     required: true
     schema:
       $ref: "#/definitions/ParkingLotCreate"
   ParkingLotUpdate:
     in: "body"
-    name: "body"
+    name: "ParkingLotUpdate"
     description: "Parking lot model that needs to be updated"
     required: true
     schema:
       $ref: "#/definitions/ParkingLotUpdate"
   ParkingLotEntry:
     in: "body"
-    name: "body"
+    name: "ParkingLotEntry"
     description: "Parking lot model that needs to be added"
     required: true
     schema:

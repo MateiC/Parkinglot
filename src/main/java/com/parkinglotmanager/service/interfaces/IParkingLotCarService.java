@@ -1,10 +1,10 @@
 package com.parkinglotmanager.service.interfaces;
 
-import com.parkinglotmanager.repository.models.CarEntity;
+import com.parkinglotmanager.service.CarBom;
 
 public interface IParkingLotCarService {
 
-	CarEntity create(CarEntity parkingLot);
+	CarBom create(CarBom carBom);
 
-	CarEntity delete(CarEntity parkingLot);
+	CarBom delete(CarBom carBom);
 }

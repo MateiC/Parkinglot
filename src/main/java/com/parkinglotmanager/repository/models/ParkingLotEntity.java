@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class ParkingLotEntity extends AbstractBaseEntity {
 
 	@Column
@@ -48,6 +47,6 @@ public class ParkingLotEntity extends AbstractBaseEntity {
 	private PricingPolicyEntity pricingPolicy;
 
 	@Builder.Default
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "parkingLot", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<ParkingSpaceEntity> parkingSpaces = new ArrayList<ParkingSpaceEntity>();
 }
