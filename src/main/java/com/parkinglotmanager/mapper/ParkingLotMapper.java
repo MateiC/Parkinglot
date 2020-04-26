@@ -40,7 +40,29 @@ public class ParkingLotMapper {
 								.numberOf20KWParkingSlots(parkingLotEntity.getSmallKwSlots())
 								.numberOf50KWParkingSlots(parkingLotEntity.getBigKwSlots())
 								.numberOfStandardParkingSlots(parkingLotEntity.getGasolineSlots())
-		/* .pricingPolicy(parkingLotEntity.getPricingStrategy()) */;
+								.pricingPolicy(mapToPricingPolicy(parkingLotEntity.getPricingPolicy()));
+	}
+
+	private PricingPolicy mapToPricingPolicy(PricingPolicyEntity pricingPolicy) {
+		return new PricingPolicy()	.basePrice(pricingPolicy.getBasePrice())
+									.fixedAmmount(pricingPolicy.getFixedAmmount())
+									.policy(mapToPolicyEnum(pricingPolicy.getType()));
+	}
+
+	private PolicyEnum mapToPolicyEnum(String type) {
+		InternalPricingPolicyEnum internalPricingPolicyType = InternalPricingPolicyEnum.fromString(type);
+		if (internalPricingPolicyType != null) {
+			switch (internalPricingPolicyType) {
+			case PER_HOUR:
+				return PolicyEnum.PERHOUR;
+			case PER_HOUR_WITH_FIXED_AMMOUNT:
+				return PolicyEnum.PERHOURWITHBASEPRICE;
+			default:
+				throw new ParkingLotManagerException(ErrorsEnum.UNKNOWN_PRICING_POLICY_TYPE);
+			}
+		} else {
+			throw new ParkingLotManagerException(ErrorsEnum.UNKNOWN_PRICING_POLICY_TYPE);
+		}
 	}
 
 	public ParkingLotEntity mapToParkingLotEntityWithCode(String parkingLotCode) {
@@ -69,7 +91,7 @@ public class ParkingLotMapper {
 								.build();
 	}
 
-	private String PolicyEnumToInternalPricingPolicyEnum(PolicyEnum policyType) {
+	private String policyEnumToInternalPricingPolicyEnum(PolicyEnum policyType) {
 		switch (policyType) {
 		case PERHOUR:
 			return InternalPricingPolicyEnum.PER_HOUR.toString();
@@ -83,7 +105,7 @@ public class ParkingLotMapper {
 	private PricingPolicyEntity mapToPricingPolicyEntity(PricingPolicy pricingPolicy) {
 		return PricingPolicyEntity	.builder()
 									.basePrice(pricingPolicy.getBasePrice())
-									.type(PolicyEnumToInternalPricingPolicyEnum(pricingPolicy.getPolicy()))
+									.type(policyEnumToInternalPricingPolicyEnum(pricingPolicy.getPolicy()))
 									.build();
 	}
 }

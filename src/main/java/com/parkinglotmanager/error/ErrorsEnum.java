@@ -7,7 +7,7 @@ public enum ErrorsEnum {
 	CAR_ALREADY_EXISTS("The car with the given plate already exists"), // This one is funny but necessary
 	NOT_FREE_SLOT_FOR_TYPE("There are not free slots for this car type"), 
 	UNKNOWN_CAR_TYPE("Unknown type of car"),
-	UNKNOWN_PRICING_POLICY_TYPE("Unknown type of car");
+	UNKNOWN_PRICING_POLICY_TYPE("Unknown pricing policy");
 
 	private final String value;
 
