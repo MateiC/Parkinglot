@@ -22,9 +22,11 @@ paths:
         - "application/json"
       responses:
         '200':
-          $ref: "#/responses/ParkingLotsBasic"
+          $ref: "#/responses/ParkingLots"
         '400':
           $ref: '#/responses/400'
+        '500':
+          $ref: '#/responses/500'        
   /parkinglot/{parkingLotCode}:
     get:
       tags:
@@ -42,6 +44,8 @@ paths:
           $ref: '#/responses/400'
         '404':
           $ref: '#/responses/404'
+        '500':
+          $ref: '#/responses/500'         
     post:
       tags:
       - "Parking lot manager"
@@ -56,9 +60,11 @@ paths:
       - $ref: "#/parameters/ParkingLotCreate"
       responses:
         '200':
-          $ref: "#/responses/ParkingLot"
-        '405':
-          description: "Invalid input"
+          $ref: "#/responses/ParkingLotCreate"
+        '400':
+          $ref: '#/responses/400'
+        '500':
+          $ref: '#/responses/500'             
     put:
       tags:
       - "Parking lot manager"
@@ -73,9 +79,13 @@ paths:
       - $ref: "#/parameters/ParkingLotUpdate"
       responses:
         '200':
-          $ref: "#/responses/ParkingLot"
-        '405':
-          description: "Invalid input"          
+          $ref: "#/responses/ParkingLotUpdate"
+        '404':
+          $ref: '#/responses/404'        
+        '400':
+          $ref: '#/responses/400'
+        '500':
+          $ref: '#/responses/500'                
     delete:
       tags:
       - "Parking lot manager"
@@ -84,7 +94,8 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: "#/parameters/ParkingLotCode"
+      - $ref: "#/parameters/ParkingLotCode"      
+      - $ref: "#/parameters/Version"
       responses:
         '200':
           $ref: '#/responses/200'      
@@ -92,30 +103,34 @@ paths:
           $ref: '#/responses/400'
         '404':
           $ref: '#/responses/404'
-  /parkinglot/{parkingLotCode}/carParked:
+        '500':
+          $ref: '#/responses/500'           
+  /parkinglot/{parkingLotCode}/carParked/{carID}:
     post:
       tags:
       - "Parking lot client"
       summary: "Creates an entry in the parking lot for the given car"
-      operationId: "createparkinglotentry"
+      operationId: "createParkingLotEntry"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
       - $ref: "#/parameters/ParkingLotCode"
-      - $ref: "#/parameters/ParkingLotEntry"
+      - $ref: "#/parameters/CarID"      
+      - $ref: "#/parameters/CarType"
       responses:
         '200':
           $ref: "#/responses/ParkingLotEntry"
-        '405':
-          description: "Invalid input"
-  /parkinglot/{parkingLotCode}/carParked/{carID}:        
+        '400':
+          $ref: '#/responses/400'
+        '500':
+          $ref: '#/responses/500'          
     delete:
       tags:
       - "Parking lot client"
       summary: "Requests the exit of a car from the parking lot"
-      operationId: "createparkinglotexit"
+      operationId: "deleteParkingLotEntry"
       consumes:
       - "application/json"
       produces:
@@ -124,18 +139,24 @@ paths:
       - $ref: "#/parameters/ParkingLotCode"
       - $ref: "#/parameters/CarID"
       responses:
-        200:
-          $ref: "#/parameters/ParkingLotExit" 
-        405:
-          description: "Invalid input"          
+        '200':
+          $ref: "#/responses/ParkingLotExit" 
+        '400':
+          $ref: '#/responses/400'
+        '404':
+          $ref: '#/responses/404'
+        '500':
+          $ref: '#/responses/500'          
 definitions:
   ParkingLotCode:
+    title: ParkingLotCode
     type: "string"
     example: "NCE"
     minLength: 3
     maxLength: 3
     pattern: '[A-Z0-9]{3}'
   ParkingLotDescription:
+    title: ParkingLotDescription
     type: "string"
     example: "Nice Centre"  
   ErrorType:
@@ -163,12 +184,14 @@ definitions:
         format: "int32"
       pricingPolicy:
         $ref: "#/definitions/PricingPolicy"
-  ParkingLotsBasic:
-    title: ParkingLotsBasic
+      version:
+        $ref: "#/definitions/Version"  
+  ParkingLotsRS:
+    title: ParkingLotsRS
     type: "array"
     items:
       type: "object"
-      title: ParkingLotsBasicElement
+      title: ParkingLots
       required:
       - description
       - code
@@ -177,36 +200,21 @@ definitions:
           $ref: "#/definitions/ParkingLotDescription"
         code:
           $ref: "#/definitions/ParkingLotCode"
-  ParkingLotCreate:
-    allOf:
-      - $ref: "#/definitions/ParkingLot"
-      - type: "object"
-        required:
-          - description
-          - numberOfStandardParkingSlots
-          - numberOf20KWParkingSlots
-          - numberOf50KWParkingSlots
-          - pricingPolicy
-  ParkingLotUpdate:
-    type: "object"
-    required:
-    - pricingPolicy
-    properties:
-      pricingPolicy:
-        $ref: "#/definitions/PricingPolicy"
   CarID:
+    title: CarID  
     type: "string"
     minLength: 7
     maxLength: 7
     pattern: '[A-Z0-9]{7}'
     example: "BB123EQ"
+    description: "ID of the car"
   PricingPolicy:
+    title: PricingPolicy  
     type: "object"
-    title: PricingPolicy
     properties:
       policy:
         type: "string"
-        description: "Type of pricing policy to be used"
+        description: "Pricing policy to be used"
         enum:
         - "perHour"
         - "perHourWithBasePrice"
@@ -217,23 +225,51 @@ definitions:
          type: "number"
          format: "float"
   AssignedSlot:
+    title: AssignedSlot  
     type: "string"
     example: "G10"
-  ParkingLotEntryRQ:
+    description: "Code of the assigned slot"    
+  Version:
+    title: Version   
+    type: "integer"
+    format: "int32"
+    description: "Version of the object in the database"
+  CarType:
+    title: CarType
+    description: "Type of car to be used"
+    type: "string"
+    enum:
+    - "gasoline"
+    - "20kW"
+    - "50kW"  
+  ParkingLotCreate:
+    title: ParkingLotCreate     
+    allOf:
+      - $ref: "#/definitions/ParkingLot"
+      - type: "object"
+        required:
+          - description
+          - numberOfStandardParkingSlots
+          - numberOf20KWParkingSlots
+          - numberOf50KWParkingSlots
+          - pricingPolicy
+  ParkingLotUpdate:
+    title: ParkingLotUpdate  
     type: "object"
     required:
-    - carID
-    - carType
+    - pricingPolicy
+    - version
     properties:
-      carID:
-        $ref: "#/definitions/CarID"
-      carType:
-        type: "string"
-        description: "Type of car to be used"
-        enum:
-        - "gasoline"
-        - "20kW"
-        - "50kW"
+      pricingPolicy:
+        $ref: "#/definitions/PricingPolicy"
+      version:
+        $ref: "#/definitions/Version"        
+  ParkingLotDelete:
+    title: ParkingLotDelete
+    type: "object"
+    properties:
+      version:
+        $ref: "#/definitions/Version"    
   ParkingLotEntryRS:
     type: "object"
     required:
@@ -276,6 +312,7 @@ parameters:
     name: "carID"
     in: "path"
     required: true    
+    description: "7 character car ID plate"
     type: "string"
     minLength: 7
     maxLength: 7
@@ -294,58 +331,69 @@ parameters:
     required: true
     schema:
       $ref: "#/definitions/ParkingLotUpdate"
-  ParkingLotEntry:
+  ParkingLotDelete:
     in: "body"
-    name: "ParkingLotEntry"
-    description: "Parking lot model that needs to be added"
+    name: "ParkingLotDelete"
+    description: "Parking lot model that needs to be deleted"
     required: true
     schema:
-      $ref: "#/definitions/ParkingLotEntryRQ"    
-  ParkingLotExit:
-    in: "body"
-    name: "body"
-    description: "Parking lot model that needs to be added"
+      $ref: "#/definitions/ParkingLotDelete"
+  CarType:
+    in: "query"
+    name: "carType"
+    description: "Type of car to be used"
+    type: "string"
+    enum:
+    - "gasoline"
+    - "20kW"
+    - "50kW"
+  Version:
+    in: "query"
+    name: "version"
+    description: "Version of the object"
     required: true
-    schema:
-      $ref: "#/definitions/ParkingLotExitRS"    
+    type: "integer"
+    format: "int32"
 responses:
-  ParkingLotsBasic:
-    description: Retrieve all parking lots
+  ParkingLots:
+    description: "Retrieve all parking lots"
     schema:
-      $ref: '#/definitions/ParkingLotsBasic'
+      $ref: '#/definitions/ParkingLotsRS'
   ParkingLot:
-    description: Retrieve one parking lot
+    description: "Retrieve one parking lot"
     schema:
       $ref: '#/definitions/ParkingLot'
+  ParkingLotCreate:
+    description: "Create one parking lot"
+    schema:
+      $ref: '#/definitions/ParkingLotCreate'
+  ParkingLotUpdate:
+    description: "Update one parking lot"
+    schema:
+      $ref: '#/definitions/ParkingLotUpdate'      
   ParkingLotEntry:
-    description: Retrieve one parking lot
+    description: "Create one parking lot entry"
     schema:
       $ref: '#/definitions/ParkingLotEntryRS' 
   ParkingLotExit:
-    description: Retrieve one parking lot
+    description: "Delete one parking lot entry"
     schema:
-      $ref: '#/definitions/ParkingLotEntryRQ'   
+      $ref: '#/definitions/ParkingLotExitRS'         
   ErrorResponse:
-    description: Retrieve one parking lot
+    description: "Error returned by the backend"
     schema:
       $ref: '#/definitions/ErrorType'    
   '200':
-    description: Successful operation
-    schema:
-      type: string    
+    description: "Successful operation"
   '400':
-    description: Bad Request
-    schema:
-      $ref: '#/definitions/ErrorType'
-  '403':
-    description: Forbidden
+    description: "Bad Request"
     schema:
       $ref: '#/definitions/ErrorType'
   '404':
-    description: Resource Not found
+    description: "Resource Not found"
     schema:
       $ref: '#/definitions/ErrorType'    
   '500':
-    description: Unexpected error
+    description: "Unexpected error"
     schema:
       $ref: '#/definitions/ErrorType'

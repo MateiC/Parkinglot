@@ -52,6 +52,7 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 	@Override
 	public ParkingLotEntity update(ParkingLotEntity parkingLot) {
 		ParkingLotEntity persistedEntity = retrievePersistedEntity(parkingLot);
+		compareVersion(parkingLot, persistedEntity);
 		persistedEntity.setPricingPolicy(retrievePersistedOrNewPricingPolicy(parkingLot));
 		return parkingLotDao.save(persistedEntity);
 	}
@@ -59,6 +60,7 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 	@Override
 	public void delete(ParkingLotEntity parkingLot) {
 		ParkingLotEntity persistedEntity = retrievePersistedEntity(parkingLot);
+		compareVersion(parkingLot, persistedEntity);
 		parkingLotDao.delete(persistedEntity);
 	}
 
@@ -122,4 +124,11 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 			return newPricingPolicy;
 		}
 	}
+
+	private void compareVersion(ParkingLotEntity parkingLot, ParkingLotEntity persistedEntity) {
+		if (parkingLot.getVersion() != persistedEntity.getVersion()) {
+			throw new ParkingLotManagerException(ErrorsEnum.OPTIMISTIC_LOCK);
+		}
+	}
+
 }

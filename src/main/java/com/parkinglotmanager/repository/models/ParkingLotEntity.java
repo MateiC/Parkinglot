@@ -11,18 +11,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "PARKING_LOT", uniqueConstraints = { @UniqueConstraint(columnNames = { "code" }) })
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ParkingLotEntity extends AbstractBaseEntity {
@@ -42,11 +44,12 @@ public class ParkingLotEntity extends AbstractBaseEntity {
 	@Column
 	private Integer bigKwSlots;
 
+	@Version
+	@Column(name = "version", nullable = false)
+	protected Integer version;
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "pricingpolicy_id")
-//	@JoinColumns({ @JoinColumn(name = "type", referencedColumnName = "type", updatable = false, insertable = false),
-//			@JoinColumn(name = "basePrice", referencedColumnName = "basePrice", updatable = false, insertable = false),
-//			@JoinColumn(name = "fixedAmmount", referencedColumnName = "fixedAmmount", updatable = false, insertable = false) })
 	private PricingPolicyEntity pricingPolicy;
 
 	@Builder.Default
