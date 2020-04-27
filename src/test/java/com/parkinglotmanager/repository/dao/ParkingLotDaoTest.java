@@ -91,4 +91,19 @@ public class ParkingLotDaoTest {
 		assertEquals(0, pricingPolicyDao.count());
 	}
 
+	@Test
+	public void testManyToOnePricingPolicy() {
+		ParkingLotEntity parkingLotEntity2 = ParkingLotEntity	.builder()
+																.code("PKM")
+																.description("Parking lot")
+																.gasolineSlots(1)
+																.smallKwSlots(2)
+																.bigKwSlots(3)
+																.pricingPolicy(pricingPolicyEntity)
+																.build();
+		testInstance.saveAndFlush(parkingLotEntity2);
+		assertEquals(2, testInstance.count());
+		assertEquals(1, pricingPolicyDao.count());
+	}
+
 }

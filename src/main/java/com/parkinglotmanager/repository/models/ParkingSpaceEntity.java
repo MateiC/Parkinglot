@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "PARKING_SPACE", uniqueConstraints = { @UniqueConstraint(columnNames = { "code" }) })
+@Table(name = "PARKING_SPACE", uniqueConstraints = { @UniqueConstraint(columnNames = { "code", "parkingLot_id" }) })
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder

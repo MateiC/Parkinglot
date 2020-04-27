@@ -1,11 +1,7 @@
 package com.parkinglotmanager.repository.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -16,7 +12,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "PRICING_POLICY", uniqueConstraints = { @UniqueConstraint(columnNames = { "type" }) })
+@Table(name = "PRICING_POLICY", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "type", "basePrice", "fixedAmmount" }) })
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder
@@ -33,7 +30,7 @@ public class PricingPolicyEntity extends AbstractBaseEntity {
 	@Column
 	private Float fixedAmmount;
 
-	@Builder.Default
-	@OneToMany(mappedBy = "pricingPolicy", orphanRemoval = true)
-	private List<ParkingLotEntity> parkingLotEntities = new ArrayList<ParkingLotEntity>();
+//	@Builder.Default
+//	@OneToMany(mappedBy = "pricingPolicy")
+//	private List<ParkingLotEntity> parkingLotEntities = new ArrayList<ParkingLotEntity>();
 }

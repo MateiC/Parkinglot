@@ -34,6 +34,7 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 	public ParkingLotEntity create(ParkingLotEntity parkingLot) {
 		checkIfEntityAlreadyExists(parkingLot);
 		createParkingSpaces(parkingLot);
+		parkingLot.setPricingPolicy(retrievePersistedOrNewPricingPolicy(parkingLot));
 		return parkingLotDao.save(parkingLot);
 	}
 
@@ -51,7 +52,7 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 	@Override
 	public ParkingLotEntity update(ParkingLotEntity parkingLot) {
 		ParkingLotEntity persistedEntity = retrievePersistedEntity(parkingLot);
-		updatePricingPolicy(persistedEntity);
+		persistedEntity.setPricingPolicy(retrievePersistedOrNewPricingPolicy(parkingLot));
 		return parkingLotDao.save(persistedEntity);
 	}
 
@@ -111,15 +112,14 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 		}
 	}
 
-	private ParkingLotEntity updatePricingPolicy(ParkingLotEntity persistedLotEntity) {
-		PricingPolicyEntity persistentPricingPolicy = persistedLotEntity.getPricingPolicy();
-		persistentPricingPolicy.setBasePrice(persistedLotEntity	.getPricingPolicy()
-																.getBasePrice());
-		persistentPricingPolicy.setType(persistedLotEntity	.getPricingPolicy()
-															.getType());
-		persistentPricingPolicy.setFixedAmmount(persistedLotEntity	.getPricingPolicy()
-																	.getFixedAmmount());
-		return persistedLotEntity;
-
+	private PricingPolicyEntity retrievePersistedOrNewPricingPolicy(ParkingLotEntity parkingLot) {
+		PricingPolicyEntity newPricingPolicy = parkingLot.getPricingPolicy();
+		PricingPolicyEntity persistedPricingPolicy = pricingPolicyDao.findByTypeAndBasePriceAndFixedAmmount(
+				newPricingPolicy.getType(), newPricingPolicy.getBasePrice(), newPricingPolicy.getFixedAmmount());
+		if (persistedPricingPolicy != null) {
+			return persistedPricingPolicy;
+		} else {
+			return newPricingPolicy;
+		}
 	}
 }

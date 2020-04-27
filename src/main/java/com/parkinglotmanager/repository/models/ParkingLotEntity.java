@@ -43,7 +43,10 @@ public class ParkingLotEntity extends AbstractBaseEntity {
 	private Integer bigKwSlots;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "pricingPolicy_id")
+	@JoinColumn(name = "pricingpolicy_id")
+//	@JoinColumns({ @JoinColumn(name = "type", referencedColumnName = "type", updatable = false, insertable = false),
+//			@JoinColumn(name = "basePrice", referencedColumnName = "basePrice", updatable = false, insertable = false),
+//			@JoinColumn(name = "fixedAmmount", referencedColumnName = "fixedAmmount", updatable = false, insertable = false) })
 	private PricingPolicyEntity pricingPolicy;
 
 	@Builder.Default

@@ -8,5 +8,5 @@ import com.parkinglotmanager.repository.models.PricingPolicyEntity;
 @Repository
 public interface IPricingPolicyDao extends JpaRepository<PricingPolicyEntity, Integer> {
 
-	PricingPolicyEntity findByType(String type);
+	PricingPolicyEntity findByTypeAndBasePriceAndFixedAmmount(String type, Float basePrice, Float fixedAmmount);
 }

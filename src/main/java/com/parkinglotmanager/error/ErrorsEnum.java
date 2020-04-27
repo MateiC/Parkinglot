@@ -2,7 +2,7 @@ package com.parkinglotmanager.error;
 
 public enum ErrorsEnum {
 	PARKING_LOT_NOT_FOUND("The parking lot with the given code was not found"),
-	PARKING_LOT_ALREADY_EXISTS("The parking lot with the given code already exists"),
+	PARKING_LOT_ALREADY_EXISTS("The parking lot with the given code already exists or is in another parking lot"),
 	CAR_NOT_FOUND("The car with the given plate was not found"),
 	CAR_ALREADY_EXISTS("The car with the given plate already exists"), // This one is funny but necessary
 	NOT_FREE_SLOT_FOR_TYPE("There are not free slots for this car type"), 
