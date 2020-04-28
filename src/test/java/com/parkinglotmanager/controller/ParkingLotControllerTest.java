@@ -1,5 +1,6 @@
 package com.parkinglotmanager.controller;
 
+import org.hamcrest.Matchers;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -22,7 +23,35 @@ public class ParkingLotControllerTest extends AbstractSpringBootTest {
 
 	@Test
 
-	public void B_testCreateParkingLotByCode() {
+	public void B_testCreateParkingLot() {
+		RestAssured	.given()
+					.contentType(ContentType.JSON)
+					// @formatter:off
+					.body("{\r\n" + "  \"description\": \"Nice Centre\",\r\n"
+							+ "  \"numberOfStandardParkingSlots\": 1,\r\n" 
+							+ "  \"numberOf20KWParkingSlots\": 0,\r\n"
+							+ "  \"numberOf50KWParkingSlots\": 1,\r\n" 
+							+ "  \"pricingPolicy\": {\r\n"
+							+ "    \"policy\": \"perHour\",\r\n" 
+							+ "    \"basePrice\": 0,\r\n"
+							+ "    \"fixedAmmount\": 0\r\n" 
+							+ "  }\r\n" 
+							+ "}")
+					// @formatter:on
+					.post("/parkinglotmanager/parkinglot/TES")
+					.then()
+					.assertThat()
+					.statusCode(200)
+					.body("version", Matchers.equalTo(0))
+					.body("numberOfStandardParkingSlots", Matchers.equalTo(1))
+					.body("numberOf20KWParkingSlots", Matchers.equalTo(0))
+					.body("numberOf50KWParkingSlots", Matchers.equalTo(1))
+					.body("pricingPolicy.policy", Matchers.equalTo("perHour"))
+					.body("pricingPolicy.basePrice", Matchers.equalTo(0.0F))
+					.body("pricingPolicy.fixedAmmount", Matchers.equalTo(0.0F));
+	}
+
+	public void B_testCreateParkingWithSameCode() {
 		RestAssured	.given()
 					.contentType(ContentType.JSON)
 					// @formatter:off
@@ -40,17 +69,24 @@ public class ParkingLotControllerTest extends AbstractSpringBootTest {
 					.post("/parkinglotmanager/parkinglot/TES")
 					.then()
 					.assertThat()
-					.statusCode(200);
+					.statusCode(500);
 	}
 
 	@Test
-	public void C_testRetrieveParkingLotByCode() {
+	public void C_testRetrieveParkingLot() {
 		RestAssured	.given()
 					.contentType(ContentType.JSON)
 					.get("/parkinglotmanager/parkinglot/TES")
 					.then()
 					.assertThat()
-					.statusCode(200);
+					.statusCode(200)
+					.body("version", Matchers.equalTo(0))
+					.body("numberOfStandardParkingSlots", Matchers.equalTo(1))
+					.body("numberOf20KWParkingSlots", Matchers.equalTo(0))
+					.body("numberOf50KWParkingSlots", Matchers.equalTo(1))
+					.body("pricingPolicy.policy", Matchers.equalTo("perHour"))
+					.body("pricingPolicy.basePrice", Matchers.equalTo(0.0F))
+					.body("pricingPolicy.fixedAmmount", Matchers.equalTo(0.0F));
 	}
 
 	@Test
@@ -64,13 +100,15 @@ public class ParkingLotControllerTest extends AbstractSpringBootTest {
 	}
 
 	@Test
-	public void E_testUpdateParkingLotByCode() {
+	public void E_testUpdateParkingLot() {
 		RestAssured	.given()
 					.contentType(ContentType.JSON)
 					// @formatter:off
-					.body("{\r\n" + "  \"pricingPolicy\": {\r\n" 
+					.body("{\r\n" 
+							+ "  \"pricingPolicy\": {\r\n" 
 							+ "    \"policy\": \"perHour\",\r\n"
-							+ "    \"basePrice\": 2,\r\n" + "    \"fixedAmmount\": 1\r\n" 
+							+ "    \"basePrice\": 2,\r\n" 
+							+ "    \"fixedAmmount\": 1\r\n" 
 							+ "  },\r\n"
 							+ "  \"version\": 0\r\n" 
 							+ "}")
@@ -78,7 +116,11 @@ public class ParkingLotControllerTest extends AbstractSpringBootTest {
 					.put("/parkinglotmanager/parkinglot/TES")
 					.then()
 					.assertThat()
-					.statusCode(200);
+					.statusCode(200)
+					.body("version", Matchers.equalTo(1))
+					.body("pricingPolicy.policy", Matchers.equalTo("perHour"))
+					.body("pricingPolicy.basePrice", Matchers.equalTo(2.0F))
+					.body("pricingPolicy.fixedAmmount", Matchers.equalTo(1.0F));
 	}
 
 	@Test

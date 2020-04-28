@@ -236,7 +236,7 @@ definitions:
     description: "Version of the object in the database"
   CarType:
     title: CarType
-    description: "Type of car to be used"
+    description: "Type of car to be used in path"
     type: "string"
     enum:
     - "gasoline"
@@ -270,7 +270,7 @@ definitions:
     properties:
       version:
         $ref: "#/definitions/Version"    
-  ParkingLotEntryRS:
+  ParkingLotEntry:
     type: "object"
     required:
     - carID
@@ -283,7 +283,7 @@ definitions:
        $ref: "#/definitions/AssignedSlot"
       entryTime:
         type: "string"
-  ParkingLotExitRS:
+  ParkingLotExit:
     type: "object"
     required:
     - carID
@@ -352,7 +352,7 @@ parameters:
     name: "version"
     description: "Version of the object"
     required: true
-    type: "integer"
+    type: "number"
     format: "int32"
 responses:
   ParkingLots:
@@ -374,11 +374,11 @@ responses:
   ParkingLotEntry:
     description: "Create one parking lot entry"
     schema:
-      $ref: '#/definitions/ParkingLotEntryRS' 
+      $ref: '#/definitions/ParkingLotEntry' 
   ParkingLotExit:
     description: "Delete one parking lot entry"
     schema:
-      $ref: '#/definitions/ParkingLotExitRS'         
+      $ref: '#/definitions/ParkingLotExit'         
   ErrorResponse:
     description: "Error returned by the backend"
     schema:

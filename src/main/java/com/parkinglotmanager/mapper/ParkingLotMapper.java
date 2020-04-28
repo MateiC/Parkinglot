@@ -109,6 +109,7 @@ public class ParkingLotMapper {
 		return PricingPolicyEntity	.builder()
 									.basePrice(pricingPolicy.getBasePrice())
 									.type(policyEnumToInternalPricingPolicyEnum(pricingPolicy.getPolicy()))
+									.fixedAmmount(pricingPolicy.getFixedAmmount())
 									.build();
 	}
 

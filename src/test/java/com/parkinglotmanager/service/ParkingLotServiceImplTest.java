@@ -47,9 +47,6 @@ public class ParkingLotServiceImplTest {
 	public ExpectedException thrown = ExpectedException.none();
 
 	private static final String PARKINGLOTCODE = "P1";
-	private static final String PARKINGSPACE1 = "PS1";
-	private static final String PLATE1 = "PL1";
-	private static final String GAS = "G";
 
 	private ParkingLotEntity parkingLotEntity;
 
@@ -75,6 +72,7 @@ public class ParkingLotServiceImplTest {
 											.smallKwSlots(2)
 											.bigKwSlots(3)
 											.pricingPolicy(pricingPolicyEntity)
+											.version(0)
 											.build();
 
 		persistedPricingPolicyEntity = PricingPolicyEntity	.builder()
@@ -90,6 +88,7 @@ public class ParkingLotServiceImplTest {
 													.smallKwSlots(2)
 													.bigKwSlots(3)
 													.pricingPolicy(persistedPricingPolicyEntity)
+													.version(0)
 													.build();
 
 	}
@@ -103,7 +102,7 @@ public class ParkingLotServiceImplTest {
 		});
 	}
 
-//	--- CREATE ---
+	// --- CREATE ---
 	@Test
 	public void testCreateWithParkingAleadyExists() {
 
@@ -133,7 +132,7 @@ public class ParkingLotServiceImplTest {
 						.size());
 	}
 
-//	--- RETRIEVE ---
+	// --- RETRIEVE ---
 
 	@Test
 	public void testRetrieveWithParkingNotExists() {
@@ -179,6 +178,19 @@ public class ParkingLotServiceImplTest {
 	}
 
 	@Test
+	public void testUpdateWithDifferentVersion() {
+
+		persistedParkingLotEntity.setVersion(1);
+
+		expectedError(ErrorsEnum.OPTIMISTIC_LOCK);
+
+		Mockito	.when(parkingLotDao.findByCode(parkingLotEntity.getCode()))
+				.thenReturn(persistedParkingLotEntity);
+
+		service.update(parkingLotEntity);
+	}
+
+	@Test
 	public void testUpdate() {
 
 		Mockito	.when(parkingLotDao.findByCode(parkingLotEntity.getCode()))
@@ -206,10 +218,23 @@ public class ParkingLotServiceImplTest {
 	}
 
 	@Test
+	public void testDeleteWithDifferentVersion() {
+
+		persistedParkingLotEntity.setVersion(1);
+
+		Mockito	.when(parkingLotDao.findByCode(parkingLotEntity.getCode()))
+				.thenReturn(persistedParkingLotEntity);
+
+		expectedError(ErrorsEnum.OPTIMISTIC_LOCK);
+
+		service.delete(parkingLotEntity);
+	}
+
+	@Test
 	public void testDelete() {
 
 		Mockito	.when(parkingLotDao.findByCode(parkingLotEntity.getCode()))
-				.thenReturn(parkingLotEntity);
+				.thenReturn(persistedParkingLotEntity);
 
 		service.delete(parkingLotEntity);
 	}
