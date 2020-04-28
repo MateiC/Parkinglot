@@ -1,5 +1,7 @@
 package com.parkinglotmanager.error;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.Getter;
 
 /**
@@ -17,5 +19,9 @@ public class ParkingLotManagerException extends RuntimeException {
 	public ParkingLotManagerException(ErrorsEnum errorEnum) {
 		super(errorEnum.toString());
 		this.errorEnum = errorEnum;
+	}
+
+	public HttpStatus getHttpStatus() {
+		return errorEnum.getHttpStatus();
 	}
 }
