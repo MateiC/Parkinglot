@@ -46,12 +46,14 @@ All the examples here will be shown with localhost.
 curl -X GET "localhost:8080/parkinglotmanager/parkinglots" -H "accept: application/json"
 ``` 
 - If the request is successful, the response will be something like this:
+```json
 [
   {
     "description": "Nice Centre",
     "code": "NCE"
   }
 ]
+```
 
 ## Create a parking lot
 - The manager can create a parking lot with a unique code by using the following request:
@@ -62,6 +64,7 @@ curl -X POST "http://editor.swagger.io/parkinglotmanager/parkinglot/NCE" -H "acc
 This can also create a new pricing policy if the requested one does not exist.
 
 - If the request is successful, the response will be something like this:
+```json
 {
   "description": "Nice Centre",
   "numberOfStandardParkingSlots": 0,
@@ -74,7 +77,7 @@ This can also create a new pricing policy if the requested one does not exist.
   },
   "version": 0
 }
-
+```
 
 ## Retrieve parking lot by code
 
@@ -83,6 +86,7 @@ This can also create a new pricing policy if the requested one does not exist.
 curl -X GET "http://editor.swagger.io/parkinglotmanager/parkinglot/NCE" -H "accept: application/json"
 ```
 - If the request is successful, the response will be something like this:
+```json
 {
   "description": "Nice Centre",
   "numberOfStandardParkingSlots": 0,
@@ -95,13 +99,14 @@ curl -X GET "http://editor.swagger.io/parkinglotmanager/parkinglot/NCE" -H "acce
   },
   "version": 0
 }
-
+```
 ## Update parking lot by code
 - The manager(s) can update the pricing policy of the parking lot by using the following query:
 ```ssh
 curl -X PUT "http://editor.swagger.io/parkinglotmanager/parkinglot/NCE" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"pricingPolicy\": { \"policy\": \"perHour\", \"basePrice\": 0, \"fixedAmmount\": 0 }, \"version\": 0}"
 ```
 - If the request is successful, the response will be something like this:
+```json
 {
   "pricingPolicy": {
     "policy": "perHour",
@@ -110,14 +115,15 @@ curl -X PUT "http://editor.swagger.io/parkinglotmanager/parkinglot/NCE" -H "acce
   },
   "version": 1
 }
-After each update, the version of the parking lot is bumped to ensure consistency. The next update should provide the corresponding version otherwise an error can occur.
+```
+- After each update, the version of the parking lot is bumped to ensure consistency. The next update should provide the corresponding version otherwise an error can occur.
 
 ## Delete the parking lot by code
 - The manager(s) can delete the parking lot providing the code and the correct version:
 ```ssh
 curl -X DELETE "http://editor.swagger.io/parkinglotmanager/parkinglot/NCE?version=1" -H "accept: application/json"
 ```
-There is no body request for the delete and the answer will only be 200 if the operation is successful. The parking lot delete also deletes every car that is stored within.
+- There is no body request for the delete and the answer will only be 200 if the operation is successful. The parking lot delete also deletes every car that is stored within.
 
 ## Create a parking lot entry
 - A new car can request entry in the parking lot by using the following query:
@@ -125,11 +131,13 @@ There is no body request for the delete and the answer will only be 200 if the o
 curl -X POST "http://editor.swagger.io/parkinglotmanager/parkinglot/NCE/carParked/BB123EQ?carType=gasoline" -H "accept: application/json"
 ```
 - If the request is successful the response will be something like:
+```json
 {
   "carID": "BB123EQ",
   "assignedSlot": "G10",
   "entryTime": "string"
 }
+```
 
 ## Delete the parking lot entry
 - An existing car can request exit from the parking lot by using the following query:
@@ -137,11 +145,13 @@ curl -X POST "http://editor.swagger.io/parkinglotmanager/parkinglot/NCE/carParke
 curl -X DELETE "http://editor.swagger.io/parkinglotmanager/parkinglot/NCE/carParked/BB123EQ" -H "accept: application/json"
 ```
 - If the request is successful the response will be something like:
+```json
 {
   "carID": "BB123EQ",
   "assignedSlot": "G10",
   "sumToPay": 32.5
 }
+```
 
 ## Possible errors
 - The parking lot with the given code was not found"
