@@ -17,6 +17,12 @@ import com.parkinglotmanager.repository.models.ParkingSpaceEntity;
 import com.parkinglotmanager.repository.models.PricingPolicyEntity;
 import com.parkinglotmanager.service.interfaces.IParkingLotService;
 
+/**
+ * Service layer for the parking lot
+ * 
+ * @author Mat
+ *
+ */
 @Service
 @Transactional
 public class ParkingLotServiceImpl implements IParkingLotService {
@@ -130,5 +136,4 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 			throw new ParkingLotManagerException(ErrorsEnum.OPTIMISTIC_LOCK);
 		}
 	}
-
 }

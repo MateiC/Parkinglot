@@ -88,7 +88,7 @@ public class ParkingLotDaoTest {
 		testInstance.deleteByCode(parkingLotEntity.getCode());
 		assertEquals(0, testInstance.count());
 		assertEquals(0, parkingSpaceDao.count());
-		assertEquals(0, pricingPolicyDao.count());
+		assertEquals(1, pricingPolicyDao.count());
 	}
 
 	@Test

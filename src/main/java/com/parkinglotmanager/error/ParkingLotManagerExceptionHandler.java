@@ -9,6 +9,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.parkinglotmanager.ErrorType;
 
+/**
+ * Handles specific errors differently.
+ * Internal, custom errors are built here.
+ * 
+ * @author Mat
+ *
+ */
 @ControllerAdvice
 public class ParkingLotManagerExceptionHandler extends ResponseEntityExceptionHandler {
 

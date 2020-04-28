@@ -8,6 +8,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * BOM used to pass more info from the repository to the service layer and back.
+ * 
+ * @author Mat
+ *
+ */
 @Data
 @EqualsAndHashCode
 @Builder

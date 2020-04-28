@@ -5,6 +5,12 @@ import org.springframework.stereotype.Component;
 import com.parkinglotmanager.error.ErrorsEnum;
 import com.parkinglotmanager.error.ParkingLotManagerException;
 
+/**
+ * Validate the input for invalid parking lot codes or plates
+ * 
+ * @author Mat
+ *
+ */
 @Component
 public class BusinessValidator {
 

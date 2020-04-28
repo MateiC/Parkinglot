@@ -19,6 +19,12 @@ import com.parkinglotmanager.repository.models.ParkingSpaceEntity;
 import com.parkinglotmanager.repository.models.PricingPolicyEntity;
 import com.parkinglotmanager.service.interfaces.IParkingLotCarService;
 
+/**
+ * Service layer for the car
+ * 
+ * @author Mat
+ *
+ */
 @Service
 @Transactional
 public class ParkingLotCarServiceImpl implements IParkingLotCarService {
@@ -113,11 +119,7 @@ public class ParkingLotCarServiceImpl implements IParkingLotCarService {
 		CarEntity persisteCarEntity = findEntity(carBom	.getCarEntity()
 														.getPlate());
 
-		long diff = Date.from(Instant.now())
-						.getTime()
-				- persisteCarEntity	.getArrivalTime()
-									.getTime();
-		long diffHours = diff / (60 * 60 * 1000) % 24;
+		long diffHours = computeDiffInHours(persisteCarEntity);
 		switch (InternalPricingPolicyEnum.fromString(persistedPricingPolicy.getType())) {
 		case PER_HOUR:
 			carBom.setPriceToPay(diffHours * persistedPricingPolicy.getBasePrice());
@@ -130,6 +132,15 @@ public class ParkingLotCarServiceImpl implements IParkingLotCarService {
 			throw new ParkingLotManagerException(ErrorsEnum.UNKNOWN_PRICING_POLICY_TYPE);
 
 		}
+	}
+
+	private long computeDiffInHours(CarEntity persisteCarEntity) {
+		long diff = Date.from(Instant.now())
+						.getTime()
+				- persisteCarEntity	.getArrivalTime()
+									.getTime();
+		long diffHours = diff / (60 * 60 * 1000) % 24;
+		return diffHours;
 	}
 
 }

@@ -5,6 +5,12 @@ import org.springframework.stereotype.Repository;
 
 import com.parkinglotmanager.repository.models.PricingPolicyEntity;
 
+/**
+ * The DAO for the Parking policy entity
+ * 
+ * @author Mat
+ *
+ */
 @Repository
 public interface IPricingPolicyDao extends JpaRepository<PricingPolicyEntity, Integer> {
 

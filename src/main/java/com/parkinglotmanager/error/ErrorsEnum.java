@@ -1,5 +1,10 @@
 package com.parkinglotmanager.error;
 
+/**
+ * Stores all the possible values for errors
+ * 
+ * @author Mat
+ */
 public enum ErrorsEnum {
 	PARKING_LOT_NOT_FOUND("The parking lot with the given code was not found"),
 	PARKING_LOT_ALREADY_EXISTS("The parking lot with the given code already exists"),

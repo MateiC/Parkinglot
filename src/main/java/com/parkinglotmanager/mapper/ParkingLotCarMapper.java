@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.parkinglotmanager.CarType;
-import com.parkinglotmanager.ParkingLotEntryRS;
-import com.parkinglotmanager.ParkingLotExitRS;
+import com.parkinglotmanager.ParkingLotEntry;
+import com.parkinglotmanager.ParkingLotExit;
 import com.parkinglotmanager.error.ErrorsEnum;
 import com.parkinglotmanager.error.ParkingLotManagerException;
 import com.parkinglotmanager.mapper.validator.BusinessValidator;
@@ -16,6 +16,13 @@ import com.parkinglotmanager.repository.models.CarEntity;
 import com.parkinglotmanager.service.CarBom;
 import com.parkinglotmanager.service.InternalCarTypeEnum;
 
+/**
+ * 
+ * Maps requests for the service layer or service responses to outputs
+ * 
+ * @author Mat
+ *
+ */
 @Component
 public class ParkingLotCarMapper {
 
@@ -40,12 +47,12 @@ public class ParkingLotCarMapper {
 						.build();
 	}
 
-	public ParkingLotEntryRS mapToParkingLotEntryRS(CarBom carBom) {
+	public ParkingLotEntry mapToParkingLotEntry(CarBom carBom) {
 		CarEntity carEntity = carBom.getCarEntity();
-		return new ParkingLotEntryRS()	.carID(carEntity.getPlate())
-										.assignedSlot(carBom.getParkingSpaceCode())
-										.entryTime(carEntity.getArrivalTime()
-															.toString());
+		return new ParkingLotEntry().carID(carEntity.getPlate())
+									.assignedSlot(carBom.getParkingSpaceCode())
+									.entryTime(carEntity.getArrivalTime()
+														.toString());
 	}
 
 	// Delete
@@ -60,11 +67,11 @@ public class ParkingLotCarMapper {
 						.build();
 	}
 
-	public ParkingLotExitRS mapToParkingLotExitRS(CarBom carBom) {
-		return new ParkingLotExitRS()	.carID(carBom	.getCarEntity()
-														.getPlate())
-										.assignedSlot(carBom.getParkingSpaceCode())
-										.sumToPay(carBom.getPriceToPay());
+	public ParkingLotExit mapToParkingLotExit(CarBom carBom) {
+		return new ParkingLotExit()	.carID(carBom	.getCarEntity()
+													.getPlate())
+									.assignedSlot(carBom.getParkingSpaceCode())
+									.sumToPay(carBom.getPriceToPay());
 	}
 
 	private String CarTypeEnumToInternalCarTypeEnum(CarType carType) {

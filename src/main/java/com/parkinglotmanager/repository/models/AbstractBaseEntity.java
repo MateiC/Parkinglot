@@ -10,6 +10,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Abstract base entity for most of the models.
+ * 
+ * @author Mat
+ *
+ */
 @MappedSuperclass
 @Data
 @SuperBuilder

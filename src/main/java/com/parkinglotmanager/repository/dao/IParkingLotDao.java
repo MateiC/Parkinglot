@@ -5,6 +5,12 @@ import org.springframework.stereotype.Repository;
 
 import com.parkinglotmanager.repository.models.ParkingLotEntity;
 
+/**
+ * The DAO for the Parking lot entity
+ * 
+ * @author Mat
+ *
+ */
 @Repository
 public interface IParkingLotDao extends JpaRepository<ParkingLotEntity, Integer> {
 

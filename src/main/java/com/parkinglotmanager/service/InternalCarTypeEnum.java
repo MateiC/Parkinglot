@@ -1,5 +1,12 @@
 package com.parkinglotmanager.service;
 
+/**
+ * Internal enum to map various types of engines/car types.
+ * Created in order to not depend on the API definitions
+ * 
+ * @author Mat
+ *
+ */
 public enum InternalCarTypeEnum {
 	GASOLINE("G"), SMALLKW("S"), BIGKW("B");
 

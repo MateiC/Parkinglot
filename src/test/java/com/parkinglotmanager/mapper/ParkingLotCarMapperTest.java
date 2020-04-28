@@ -14,8 +14,8 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.parkinglotmanager.CarType;
-import com.parkinglotmanager.ParkingLotEntryRS;
-import com.parkinglotmanager.ParkingLotExitRS;
+import com.parkinglotmanager.ParkingLotEntry;
+import com.parkinglotmanager.ParkingLotExit;
 import com.parkinglotmanager.mapper.validator.BusinessValidator;
 import com.parkinglotmanager.repository.models.CarEntity;
 import com.parkinglotmanager.service.CarBom;
@@ -66,7 +66,7 @@ public class ParkingLotCarMapperTest {
 	@Test
 	public void testMapToParkingLotEntryRS() {
 
-		ParkingLotEntryRS response = testInstance.mapToParkingLotEntryRS(carBom);
+		ParkingLotEntry response = testInstance.mapToParkingLotEntry(carBom);
 
 		assertEquals(parkingSpaceCode, response.getAssignedSlot());
 		assertEquals(carID, response.getCarID());
@@ -85,7 +85,7 @@ public class ParkingLotCarMapperTest {
 	@Test
 	public void testMapToParkingLotExitRS() {
 
-		ParkingLotExitRS response = testInstance.mapToParkingLotExitRS(carBom);
+		ParkingLotExit response = testInstance.mapToParkingLotExit(carBom);
 
 		assertEquals(parkingSpaceCode, response.getAssignedSlot());
 		assertEquals(carID, response.getCarID());

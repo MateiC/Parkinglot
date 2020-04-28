@@ -9,6 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import com.parkinglotmanager.repository.models.ParkingSpaceEntity;
 
+/**
+ * The DAO for the Parking space entity
+ * 
+ * @author Mat
+ *
+ */
 @Repository
 public interface IParkingSpaceDao extends JpaRepository<ParkingSpaceEntity, Integer> {
 

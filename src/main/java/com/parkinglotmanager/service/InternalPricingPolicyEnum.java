@@ -1,5 +1,12 @@
 package com.parkinglotmanager.service;
 
+/**
+ * Internal enum to map various types of pricing policies types.
+ * Created in order to not depend on the API definitions
+ * 
+ * @author Mat
+ *
+ */
 public enum InternalPricingPolicyEnum {
 	PER_HOUR("H"), PER_HOUR_WITH_FIXED_AMMOUNT("HF");
 

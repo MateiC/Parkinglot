@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.parkinglotmanager.CarType;
-import com.parkinglotmanager.ParkingLotEntryRS;
-import com.parkinglotmanager.ParkingLotExitRS;
+import com.parkinglotmanager.ParkingLotEntry;
+import com.parkinglotmanager.ParkingLotExit;
 import com.parkinglotmanager.mapper.ParkingLotCarMapper;
 import com.parkinglotmanager.service.CarBom;
 import com.parkinglotmanager.service.interfaces.IParkingLotCarService;
@@ -26,15 +26,15 @@ public class ParkingLotCarController {
 	private IParkingLotCarService service;
 
 	@PostMapping(path = "/parkinglot/{parkingLotCode}/carParked/{carID}", consumes = "application/json", produces = "application/json")
-	public ParkingLotEntryRS createParkingLotEntry(@PathVariable String parkingLotCode, @PathVariable String carID,
+	public ParkingLotEntry createParkingLotEntry(@PathVariable String parkingLotCode, @PathVariable String carID,
 			@RequestParam("carType") CarType carType) {
 		CarBom response = service.create(mapper.mapToCarBomCreate(parkingLotCode, carID, carType));
-		return mapper.mapToParkingLotEntryRS(response);
+		return mapper.mapToParkingLotEntry(response);
 	}
 
 	@DeleteMapping(path = "/parkinglot/{parkingLotCode}/carParked/{carID}", consumes = "application/json", produces = "application/json")
-	public ParkingLotExitRS deleteParkingLotEntry(@PathVariable String parkingLotCode, @PathVariable String carID) {
+	public ParkingLotExit deleteParkingLotEntry(@PathVariable String parkingLotCode, @PathVariable String carID) {
 		CarBom response = service.delete(mapper.mapToCarBomDelete(parkingLotCode, carID));
-		return mapper.mapToParkingLotExitRS(response);
+		return mapper.mapToParkingLotExit(response);
 	}
 }

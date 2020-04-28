@@ -48,7 +48,7 @@ public class ParkingLotEntity extends AbstractBaseEntity {
 	@Column(name = "version", nullable = false)
 	protected Integer version;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "pricingpolicy_id")
 	private PricingPolicyEntity pricingPolicy;
 

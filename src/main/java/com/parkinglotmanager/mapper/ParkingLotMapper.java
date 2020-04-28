@@ -20,6 +20,13 @@ import com.parkinglotmanager.repository.models.ParkingLotEntity;
 import com.parkinglotmanager.repository.models.PricingPolicyEntity;
 import com.parkinglotmanager.service.InternalPricingPolicyEnum;
 
+/**
+ * 
+ * Maps requests for the service layer or service responses to outputs
+ * 
+ * @author Mat
+ *
+ */
 @Component
 public class ParkingLotMapper {
 
