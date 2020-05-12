@@ -59,7 +59,7 @@ public class ParkingLotCarControllerTest extends AbstractSpringBootTest {
 					.post("/parkinglotmanager/parkinglot/TES/carParked/BB333EQ?carType=GASOLINE")
 					.then()
 					.assertThat()
-					.statusCode(500);
+					.statusCode(403);
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class ParkingLotCarControllerTest extends AbstractSpringBootTest {
 					.post("/parkinglotmanager/parkinglot/TES/carParked/BB333EQ?carType=GASOLINE")
 					.then()
 					.assertThat()
-					.statusCode(500);
+					.statusCode(403);
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class ParkingLotCarControllerTest extends AbstractSpringBootTest {
 					.post("/parkinglotmanager/parkinglot/TES/carParked/BB333EQ?carType=_20KW")
 					.then()
 					.assertThat()
-					.statusCode(500);
+					.statusCode(403);
 	}
 
 	@Test

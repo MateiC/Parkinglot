@@ -96,7 +96,7 @@ public class ParkingLotControllerTest extends AbstractSpringBootTest {
 					.get("/parkinglotmanager/parkinglot/TE1")
 					.then()
 					.assertThat()
-					.statusCode(500);
+					.statusCode(404);
 	}
 
 	@Test
